@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      function hasActiveSubscription() {
+        return get(/databases/$(database)/documents/users/$(userId)).data.estActif == true;
+      }
+
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'currency', 'phone', 'createdAt', 'estActif'])
+        && request.resource.data.uid == userId
+        && request.resource.data.name is string
+        && request.resource.data.currency is string
+        && (!('phone' in request.resource.data) || request.resource.data.phone is string)
+        && request.resource.data.estActif == false;
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'currency', 'phone'])
+        && request.resource.data.name is string
+        && request.resource.data.currency is string
+        && (!('phone' in request.resource.data) || request.resource.data.phone is string);
+      allow delete: if false;
+
+      match /{collectionName}/{document=**} {
+        allow read: if request.auth != null
+          && request.auth.uid == userId
+          && (collectionName != 'debts' && collectionName != 'debtPayments' || hasActiveSubscription());
+        allow create, update: if request.auth != null
+          && request.auth.uid == userId
+          && request.resource.data.ownerUid == userId
+          && (collectionName != 'debts' && collectionName != 'debtPayments' || hasActiveSubscription());
+        allow delete: if request.auth != null
+          && request.auth.uid == userId
+          && resource.data.ownerUid == userId
+          && (collectionName != 'debts' && collectionName != 'debtPayments' || hasActiveSubscription());
+      }
+    }
+  }
+}

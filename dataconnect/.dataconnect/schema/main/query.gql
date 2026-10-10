@@ -1,0 +1,290 @@
+extend type Query {
+  """
+  ✨ Look up a single `CustomerDebt` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  customerDebt(
+    """
+    The key used to identify the object.
+    """
+    key: CustomerDebt_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: CustomerDebt_FirstRow
+  ): CustomerDebt @fdc_generated(from: "CustomerDebt", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Expense` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  expense(
+    """
+    The key used to identify the object.
+    """
+    key: Expense_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Expense_FirstRow
+  ): Expense @fdc_generated(from: "Expense", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Product` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  product(
+    """
+    The key used to identify the object.
+    """
+    key: Product_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Product_FirstRow
+  ): Product @fdc_generated(from: "Product", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Sale` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  sale(
+    """
+    The key used to identify the object.
+    """
+    key: Sale_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Sale_FirstRow
+  ): Sale @fdc_generated(from: "Sale", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `SaleItem` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  saleItem(
+    """
+    The key used to identify the object.
+    """
+    key: SaleItem_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: SaleItem_FirstRow
+  ): SaleItem @fdc_generated(from: "SaleItem", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Shop` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  shop(
+    """
+    The key used to identify the object.
+    """
+    key: Shop_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Shop_FirstRow
+  ): Shop @fdc_generated(from: "Shop", purpose: QUERY_SINGLE)
+  """
+  ✨ List `CustomerDebt` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  customerDebts(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: CustomerDebt_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [CustomerDebt_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: CustomerDebt_Having
+  ): [CustomerDebt!]! @fdc_generated(from: "CustomerDebt", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Expense` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  expenses(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Expense_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Expense_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Expense_Having
+  ): [Expense!]! @fdc_generated(from: "Expense", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Product` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  products(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Product_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Product_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Product_Having
+  ): [Product!]! @fdc_generated(from: "Product", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Sale` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  sales(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Sale_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Sale_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Sale_Having
+  ): [Sale!]! @fdc_generated(from: "Sale", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `SaleItem` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  saleItems(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: SaleItem_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [SaleItem_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: SaleItem_Having
+  ): [SaleItem!]! @fdc_generated(from: "SaleItem", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Shop` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  shops(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Shop_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Shop_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Shop_Having
+  ): [Shop!]! @fdc_generated(from: "Shop", purpose: QUERY_MULTIPLE)
+}

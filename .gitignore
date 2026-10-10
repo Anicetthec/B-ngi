@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+.env*
+!.env.example
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+dataconnect-generated
+src/dataconnect-generated
+*.tsbuildinfo

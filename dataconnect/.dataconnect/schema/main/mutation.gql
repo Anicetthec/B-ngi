@@ -1,0 +1,614 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `CustomerDebt` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  customerDebt_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: CustomerDebt_Data!
+  ): CustomerDebt_KeyOutput! @fdc_generated(from: "CustomerDebt", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Expense` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  expense_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Expense_Data!
+  ): Expense_KeyOutput! @fdc_generated(from: "Expense", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Product` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  product_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Product_Data!
+  ): Product_KeyOutput! @fdc_generated(from: "Product", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Sale` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  sale_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Sale_Data!
+  ): Sale_KeyOutput! @fdc_generated(from: "Sale", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `SaleItem` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  saleItem_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: SaleItem_Data!
+  ): SaleItem_KeyOutput! @fdc_generated(from: "SaleItem", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Shop` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  shop_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Shop_Data!
+  ): Shop_KeyOutput! @fdc_generated(from: "Shop", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `CustomerDebt` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  customerDebt_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [CustomerDebt_Data!]!
+  ): [CustomerDebt_KeyOutput!]! @fdc_generated(from: "CustomerDebt", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Expense` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  expense_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Expense_Data!]!
+  ): [Expense_KeyOutput!]! @fdc_generated(from: "Expense", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Product` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  product_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Product_Data!]!
+  ): [Product_KeyOutput!]! @fdc_generated(from: "Product", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Sale` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  sale_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Sale_Data!]!
+  ): [Sale_KeyOutput!]! @fdc_generated(from: "Sale", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `SaleItem` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  saleItem_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [SaleItem_Data!]!
+  ): [SaleItem_KeyOutput!]! @fdc_generated(from: "SaleItem", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Shop` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  shop_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Shop_Data!]!
+  ): [Shop_KeyOutput!]! @fdc_generated(from: "Shop", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `CustomerDebt` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `CustomerDebt`.
+  """
+  customerDebt_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: CustomerDebt_Data!
+  ): CustomerDebt_KeyOutput! @fdc_generated(from: "CustomerDebt", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Expense` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Expense`.
+  """
+  expense_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Expense_Data!
+  ): Expense_KeyOutput! @fdc_generated(from: "Expense", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Product` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Product`.
+  """
+  product_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Product_Data!
+  ): Product_KeyOutput! @fdc_generated(from: "Product", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Sale` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Sale`.
+  """
+  sale_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Sale_Data!
+  ): Sale_KeyOutput! @fdc_generated(from: "Sale", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `SaleItem` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `SaleItem`.
+  """
+  saleItem_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: SaleItem_Data!
+  ): SaleItem_KeyOutput! @fdc_generated(from: "SaleItem", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Shop` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Shop`.
+  """
+  shop_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Shop_Data!
+  ): Shop_KeyOutput! @fdc_generated(from: "Shop", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `CustomerDebt` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `CustomerDebt`.
+  """
+  customerDebt_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [CustomerDebt_Data!]!
+  ): [CustomerDebt_KeyOutput!]! @fdc_generated(from: "CustomerDebt", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Expense` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Expense`.
+  """
+  expense_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Expense_Data!]!
+  ): [Expense_KeyOutput!]! @fdc_generated(from: "Expense", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Product` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Product`.
+  """
+  product_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Product_Data!]!
+  ): [Product_KeyOutput!]! @fdc_generated(from: "Product", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Sale` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Sale`.
+  """
+  sale_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Sale_Data!]!
+  ): [Sale_KeyOutput!]! @fdc_generated(from: "Sale", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `SaleItem` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `SaleItem`.
+  """
+  saleItem_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [SaleItem_Data!]!
+  ): [SaleItem_KeyOutput!]! @fdc_generated(from: "SaleItem", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Shop` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Shop`.
+  """
+  shop_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Shop_Data!]!
+  ): [Shop_KeyOutput!]! @fdc_generated(from: "Shop", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `CustomerDebt` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `CustomerDebt` or `null` if not found.
+  """
+  customerDebt_update(
+    """
+    The key used to identify the object.
+    """
+    key: CustomerDebt_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: CustomerDebt_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: CustomerDebt_Data!
+  ): CustomerDebt_KeyOutput @fdc_generated(from: "CustomerDebt", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Expense` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Expense` or `null` if not found.
+  """
+  expense_update(
+    """
+    The key used to identify the object.
+    """
+    key: Expense_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Expense_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Expense_Data!
+  ): Expense_KeyOutput @fdc_generated(from: "Expense", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Product` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Product` or `null` if not found.
+  """
+  product_update(
+    """
+    The key used to identify the object.
+    """
+    key: Product_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Product_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Product_Data!
+  ): Product_KeyOutput @fdc_generated(from: "Product", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Sale` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Sale` or `null` if not found.
+  """
+  sale_update(
+    """
+    The key used to identify the object.
+    """
+    key: Sale_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Sale_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Sale_Data!
+  ): Sale_KeyOutput @fdc_generated(from: "Sale", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `SaleItem` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `SaleItem` or `null` if not found.
+  """
+  saleItem_update(
+    """
+    The key used to identify the object.
+    """
+    key: SaleItem_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: SaleItem_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: SaleItem_Data!
+  ): SaleItem_KeyOutput @fdc_generated(from: "SaleItem", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Shop` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Shop` or `null` if not found.
+  """
+  shop_update(
+    """
+    The key used to identify the object.
+    """
+    key: Shop_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Shop_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Shop_Data!
+  ): Shop_KeyOutput @fdc_generated(from: "Shop", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `CustomerDebt` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  customerDebt_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: CustomerDebt_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: CustomerDebt_Data!
+  ): Int! @fdc_generated(from: "CustomerDebt", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Expense` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  expense_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Expense_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Expense_Data!
+  ): Int! @fdc_generated(from: "Expense", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Product` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  product_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Product_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Product_Data!
+  ): Int! @fdc_generated(from: "Product", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Sale` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  sale_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Sale_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Sale_Data!
+  ): Int! @fdc_generated(from: "Sale", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `SaleItem` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  saleItem_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: SaleItem_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: SaleItem_Data!
+  ): Int! @fdc_generated(from: "SaleItem", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Shop` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  shop_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Shop_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Shop_Data!
+  ): Int! @fdc_generated(from: "Shop", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `CustomerDebt` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  customerDebt_delete(
+    """
+    The key used to identify the object.
+    """
+    key: CustomerDebt_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: CustomerDebt_FirstRow
+  ): CustomerDebt_KeyOutput @fdc_generated(from: "CustomerDebt", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Expense` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  expense_delete(
+    """
+    The key used to identify the object.
+    """
+    key: Expense_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Expense_FirstRow
+  ): Expense_KeyOutput @fdc_generated(from: "Expense", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Product` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  product_delete(
+    """
+    The key used to identify the object.
+    """
+    key: Product_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Product_FirstRow
+  ): Product_KeyOutput @fdc_generated(from: "Product", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Sale` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  sale_delete(
+    """
+    The key used to identify the object.
+    """
+    key: Sale_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Sale_FirstRow
+  ): Sale_KeyOutput @fdc_generated(from: "Sale", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `SaleItem` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  saleItem_delete(
+    """
+    The key used to identify the object.
+    """
+    key: SaleItem_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: SaleItem_FirstRow
+  ): SaleItem_KeyOutput @fdc_generated(from: "SaleItem", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Shop` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  shop_delete(
+    """
+    The key used to identify the object.
+    """
+    key: Shop_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Shop_FirstRow
+  ): Shop_KeyOutput @fdc_generated(from: "Shop", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `CustomerDebt` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  customerDebt_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: CustomerDebt_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "CustomerDebt", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Expense` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  expense_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Expense_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Expense", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Product` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  product_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Product_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Product", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Sale` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  sale_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Sale_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Sale", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `SaleItem` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  saleItem_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: SaleItem_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "SaleItem", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Shop` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  shop_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Shop_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Shop", purpose: DELETE_MULTIPLE)
+}

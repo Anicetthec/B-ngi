@@ -1,0 +1,171 @@
+query GetMyShop @auth(level: USER) {
+  shop(key: { ownerUid_expr: "auth.uid" }) {
+    ownerUid
+    name
+    currency
+    subscriptionStatus
+    subscriptionExpiresAt
+  }
+}
+
+mutation SaveMyShop($name: String!, $currency: String!) @auth(level: USER) {
+  shop_upsert(data: { ownerUid_expr: "auth.uid", name: $name, currency: $currency })
+}
+
+query ListProducts @auth(level: USER) {
+  products(where: { ownerUid: { eq_expr: "auth.uid" } }, orderBy: [{ updatedAt: DESC }]) {
+    id
+    name
+    category
+    costPrice
+    sellingPrice
+    stock
+    lowStockThreshold
+    updatedAt
+  }
+}
+
+mutation UpsertProduct(
+  $id: UUID!
+  $name: String!
+  $category: String
+  $costPrice: Int!
+  $sellingPrice: Int!
+  $stock: Int!
+  $lowStockThreshold: Int!
+) @auth(level: USER) {
+  product_upsert(
+    data: {
+      id: $id
+      ownerUid_expr: "auth.uid"
+      name: $name
+      category: $category
+      costPrice: $costPrice
+      sellingPrice: $sellingPrice
+      stock: $stock
+      lowStockThreshold: $lowStockThreshold
+      updatedAt_expr: "request.time"
+    }
+  )
+}
+
+query ListSales @auth(level: USER) {
+  sales(where: { ownerUid: { eq_expr: "auth.uid" } }, orderBy: [{ createdAt: DESC }]) {
+    id
+    total
+    createdAt
+  }
+}
+
+query ListSaleItems @auth(level: USER) {
+  saleItems(where: { ownerUid: { eq_expr: "auth.uid" } }) {
+    id
+    saleId
+    productId
+    productName
+    quantity
+    unitPrice
+    costPrice
+  }
+}
+
+query ListExpenses @auth(level: USER) {
+  expenses(where: { ownerUid: { eq_expr: "auth.uid" } }, orderBy: [{ createdAt: DESC }]) {
+    id
+    label
+    amount
+    createdAt
+  }
+}
+
+query ListDebts @auth(level: USER) {
+  customerDebts(where: { ownerUid: { eq_expr: "auth.uid" } }, orderBy: [{ createdAt: DESC }]) {
+    id
+    customerName
+    phone
+    amount
+    note
+    isPaid
+    createdAt
+  }
+}
+
+mutation UpsertSale($id: UUID!, $total: Int!, $createdAt: Timestamp!) @auth(level: USER) {
+  sale_upsert(data: { id: $id, ownerUid_expr: "auth.uid", total: $total, createdAt: $createdAt })
+}
+
+mutation UpsertSaleItem(
+  $id: UUID!
+  $saleId: UUID!
+  $productId: UUID!
+  $productName: String!
+  $quantity: Int!
+  $unitPrice: Int!
+  $costPrice: Int!
+) @auth(level: USER) {
+  saleItem_upsert(
+    data: {
+      id: $id
+      ownerUid_expr: "auth.uid"
+      saleId: $saleId
+      productId: $productId
+      productName: $productName
+      quantity: $quantity
+      unitPrice: $unitPrice
+      costPrice: $costPrice
+    }
+  )
+}
+
+mutation UpsertExpense($id: UUID!, $label: String!, $amount: Int!, $createdAt: Timestamp!)
+  @auth(level: USER) {
+  expense_upsert(
+    data: { id: $id, ownerUid_expr: "auth.uid", label: $label, amount: $amount, createdAt: $createdAt }
+  )
+}
+
+query ListDebtPayments @auth(level: USER) {
+  debtPayments(where: { ownerUid: { eq_expr: "auth.uid" } }, orderBy: [{ createdAt: DESC }]) {
+    id
+    debtId
+    amount
+    createdAt
+  }
+}
+
+mutation UpsertDebt(
+  $id: UUID!
+  $customerName: String!
+  $phone: String
+  $amount: Int!
+  $note: String
+  $isPaid: Boolean!
+  $createdAt: Timestamp!
+) @auth(level: USER) {
+  customerDebt_upsert(
+    data: {
+      id: $id
+      ownerUid_expr: "auth.uid"
+      customerName: $customerName
+      phone: $phone
+      amount: $amount
+      note: $note
+      isPaid: $isPaid
+      createdAt: $createdAt
+      updatedAt_expr: "request.time"
+    }
+  )
+}
+
+mutation UpsertDebtPayment($id: UUID!, $debtId: UUID!, $amount: Int!, $createdAt: Timestamp!)
+  @auth(level: USER) {
+  debtPayment_upsert(
+    data: {
+      id: $id
+      ownerUid_expr: "auth.uid"
+      debtId: $debtId
+      amount: $amount
+      createdAt: $createdAt
+    }
+  )
+}

@@ -1,0 +1,71 @@
+enum SubscriptionStatus {
+  FREE
+  PREMIUM
+}
+
+type Shop @table(key: "ownerUid") {
+  ownerUid: String!
+  name: String!
+  currency: String! @default(value: "XOF")
+  subscriptionStatus: SubscriptionStatus! @default(value: FREE)
+  subscriptionExpiresAt: Timestamp
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type Product @table(key: ["ownerUid", "id"]) {
+  id: UUID! @default(expr: "uuidV4()")
+  ownerUid: String!
+  name: String!
+  category: String
+  costPrice: Int!
+  sellingPrice: Int!
+  stock: Int!
+  lowStockThreshold: Int! @default(value: 5)
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type Sale @table(key: ["ownerUid", "id"]) {
+  id: UUID! @default(expr: "uuidV4()")
+  ownerUid: String!
+  total: Int!
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type SaleItem @table(key: ["ownerUid", "id"]) {
+  id: UUID! @default(expr: "uuidV4()")
+  ownerUid: String!
+  saleId: UUID!
+  productId: UUID!
+  productName: String!
+  quantity: Int!
+  unitPrice: Int!
+  costPrice: Int!
+}
+
+type Expense @table(key: ["ownerUid", "id"]) {
+  id: UUID! @default(expr: "uuidV4()")
+  ownerUid: String!
+  label: String!
+  amount: Int!
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type CustomerDebt @table(key: ["ownerUid", "id"]) {
+  id: UUID! @default(expr: "uuidV4()")
+  ownerUid: String!
+  customerName: String!
+  phone: String
+  amount: Int!
+  note: String
+  isPaid: Boolean! @default(value: false)
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type DebtPayment @table(key: ["ownerUid", "id"]) {
+  id: UUID! @default(expr: "uuidV4()")
+  ownerUid: String!
+  debtId: UUID!
+  amount: Int!
+  createdAt: Timestamp! @default(expr: "request.time")
+}

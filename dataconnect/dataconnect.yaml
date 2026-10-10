@@ -1,0 +1,13 @@
+specVersion: "v1"
+serviceId: zambo
+location: us-central1
+schema:
+  source: schema
+  datasource:
+    postgresql:
+      database: zambo
+      schema: public
+      cloudSql:
+        instanceId: zambo-local-demo:us-central1:zambo
+connectorDirs:
+  - connector

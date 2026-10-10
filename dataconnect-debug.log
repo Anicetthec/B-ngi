@@ -1,0 +1,25 @@
+I1010 09:50:35.853911    9629 load.go:31] Reloading schema and connectors...
+I1010 09:50:35.918498    9629 control.go:94] [/emulator/zambo 8247] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1542B] 
+Connector "zambo": sources: connector/operations.gql [3134B] 
+I1010 09:50:35.984200    9629 codegen.go:80] [connector "zambo" javascriptSdk] Generating sources into "/home/anicet/zambo/src/dataconnect-generated"
+I1010 09:50:35.994091    9629 collector.go:107] schema extensions wrote into "/home/anicet/zambo/dataconnect/.dataconnect/schema"
+Generated sources: main/mutation.gql [19579B] prelude.gql [73219B] main/input.gql [67133B] main/relation.gql [28994B] main/query.gql [7174B] 
+I1010 09:50:35.995374    9629 collector.go:107] connector "zambo" javascriptSdk wrote into "/home/anicet/zambo/src/dataconnect-generated"
+Generated sources: esm/package.json [17B] package.json [635B] README.md [51907B] .guides/usage.md [1650B] .guides/setup.md [584B] .guides/config.json [236B] index.d.ts [10463B] esm/index.esm.js [4629B] index.cjs.js [5317B] 
+I1010 09:50:35.995406    9629 installsdk.go:138] generate.javascriptSdk.packageJsonDir is not specified, skipping automatic installation of package
+I1010 09:50:35.995438    9629 load.go:109] Finished reloading
+I1010 09:50:35.996911    9629 dev.go:105] Listening on address (HTTP + gRPC): 127.0.0.1:9399
+I1010 09:50:35.996984    9629 dev.go:105] Listening on address (HTTP + gRPC): [::1]:9399
+I1010 09:50:39.935620    9629 migrate.go:24] Running migration SQL:
+Step 1: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+Step 2: CREATE TYPE "public"."subscription_status" AS ENUM ('FREE', 'PREMIUM')
+Step 3: CREATE TABLE "public"."customer_debt" ("owner_uid" text NOT NULL, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "amount" integer NOT NULL, "created_at" timestamptz NOT NULL, "customer_name" text NOT NULL, "is_paid" boolean NOT NULL DEFAULT false, "note" text NULL, "phone" text NULL, "updated_at" timestamptz NOT NULL, PRIMARY KEY ("owner_uid", "id"))
+Step 4: CREATE TABLE "public"."expense" ("owner_uid" text NOT NULL, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "amount" integer NOT NULL, "created_at" timestamptz NOT NULL, "label" text NOT NULL, PRIMARY KEY ("owner_uid", "id"))
+Step 5: CREATE TABLE "public"."product" ("owner_uid" text NOT NULL, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "category" text NULL, "cost_price" integer NOT NULL, "low_stock_threshold" integer NOT NULL DEFAULT 5, "name" text NOT NULL, "selling_price" integer NOT NULL, "stock" integer NOT NULL, "updated_at" timestamptz NOT NULL, PRIMARY KEY ("owner_uid", "id"))
+Step 6: CREATE TABLE "public"."sale" ("owner_uid" text NOT NULL, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" timestamptz NOT NULL, "total" integer NOT NULL, PRIMARY KEY ("owner_uid", "id"))
+Step 7: CREATE TABLE "public"."sale_item" ("owner_uid" text NOT NULL, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "cost_price" integer NOT NULL, "product_id" uuid NOT NULL, "product_name" text NOT NULL, "quantity" integer NOT NULL, "sale_id" uuid NOT NULL, "unit_price" integer NOT NULL, PRIMARY KEY ("owner_uid", "id"))
+Step 8: CREATE TABLE "public"."shop" ("owner_uid" text NOT NULL, "created_at" timestamptz NOT NULL, "currency" text NOT NULL DEFAULT 'XOF', "name" text NOT NULL, "subscription_expires_at" timestamptz NULL, "subscription_status" "public"."subscription_status" NOT NULL DEFAULT 'FREE'::"public"."subscription_status", PRIMARY KEY ("owner_uid"))
+I1010 09:50:41.213186    9629 control.go:94] [/emulator/zambo f0ab] UpdateResources(): done
+Main schema: sources: schema/schema.gql [1542B] 
+Connector "zambo": sources: connector/operations.gql [3134B] 
