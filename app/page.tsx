@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  browserLocalPersistence,
   EmailAuthProvider,
   createUserWithEmailAndPassword,
   linkWithCredential,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  setPersistence,
   type User,
 } from "firebase/auth";
 import { auth, firebaseConfigured } from "@/lib/firebase";
@@ -377,6 +379,10 @@ export default function Home() {
       setUser(nextUser);
       if (nextUser) {
         setAuthMode(nextUser.isAnonymous ? "register" : "login");
+        if (!nextUser.isAnonymous) {
+          setAuthGatePassed(true);
+          authGatePassedRef.current = true;
+        }
         const emailDigits = nextUser.email?.match(/^(\d{10,15})@phone\.bingi\.app$/)?.[1];
         setPhone(localStorage.getItem(`zambo-shop-phone:${nextUser.uid}`) || (emailDigits ? `+${emailDigits}` : ""));
         if (nextUser.isAnonymous) {
@@ -536,6 +542,7 @@ export default function Home() {
     migratingRef.current = true;
     setAuthMessage("");
     try {
+      await setPersistence(currentAuth, browserLocalPersistence);
       const sourceUid = ownerUid;
       const email = emailForPhone(normalizedPhone);
       const credential = authMode === "login"

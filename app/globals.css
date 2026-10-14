@@ -350,3 +350,19 @@ tbody tr:hover { background: #f7faf7; }
   .connection-pill { display: none; }
 }
 @keyframes drawer-in { from { transform: translateX(-12px); opacity: .7; } to { transform: translateX(0); opacity: 1; } }
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .button, .text-button { font-size: 14px; }
+  .page-heading p { font-size: 14px; }
+  .eyebrow { font-size: 11px; }
+  .metric-label { font-size: 13px; }
+  .metric-value { font-size: clamp(18px, 5vw, 23px); }
+  .metric-hint { font-size: 11px; }
+  .panel-toolbar h2, .report-summary h2, .settings-panel h2 { font-size: 16px; }
+  .panel-toolbar p, .empty-state small, .alert-info small { font-size: 12px; }
+  .table-wrap th { font-size: 11px; }
+  .table-wrap td { font-size: 13px; }
+  .settings-panel label, .auth-card label, .modal-form label { font-size: 15px; }
+  input, select, textarea { font-size: 16px; }
+  .summary-line { font-size: 14px; }
+}
