@@ -2,14 +2,19 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Bĩngi — Stock & ventes",
-  description: "Gérez votre boutique, votre stock et vos ventes, même hors ligne.",
+  title: "Bĩngi — Gestion de Boutique",
+  description: "Gérez votre boutique, votre stock et vos ventes avec Bĩngi.",
   applicationName: "Bĩngi",
   manifest: "/manifest.webmanifest",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#153d32",
+  themeColor: "#263548",
   width: "device-width",
   initialScale: 1,
 };

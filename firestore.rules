@@ -27,15 +27,47 @@ service cloud.firestore {
       match /{collectionName}/{document=**} {
         allow read: if request.auth != null
           && request.auth.uid == userId
-          && (collectionName != 'debts' && collectionName != 'debtPayments' || hasActiveSubscription());
+          && (collectionName != 'suppliers' && collectionName != 'stockLosses' && collectionName != 'purchases' && collectionName != 'supplierPayments' || hasActiveSubscription());
         allow create, update: if request.auth != null
           && request.auth.uid == userId
           && request.resource.data.ownerUid == userId
-          && (collectionName != 'debts' && collectionName != 'debtPayments' || hasActiveSubscription());
+          && (collectionName != 'suppliers' && collectionName != 'stockLosses' && collectionName != 'purchases' && collectionName != 'supplierPayments' || hasActiveSubscription());
         allow delete: if request.auth != null
           && request.auth.uid == userId
           && resource.data.ownerUid == userId
-          && (collectionName != 'debts' && collectionName != 'debtPayments' || hasActiveSubscription());
+          && (collectionName != 'suppliers' && collectionName != 'stockLosses' && collectionName != 'purchases' && collectionName != 'supplierPayments' || hasActiveSubscription());
+      }
+
+      match /shops/{shopId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null
+          && request.auth.uid == userId
+          && get(/databases/$(database)/documents/users/$(userId)).data.estActif == true
+          && request.resource.data.name is string
+          && request.resource.data.currency is string;
+        allow update: if request.auth != null
+          && request.auth.uid == userId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'currency', 'phone'])
+          && request.resource.data.name is string
+          && request.resource.data.currency is string;
+        allow delete: if false;
+
+        match /{collectionName}/{document=**} {
+          function hasActiveSubscription() {
+            return get(/databases/$(database)/documents/users/$(userId)).data.estActif == true;
+          }
+          allow read: if request.auth != null
+            && request.auth.uid == userId
+            && (collectionName != 'suppliers' && collectionName != 'stockLosses' && collectionName != 'purchases' && collectionName != 'supplierPayments' || hasActiveSubscription());
+          allow create, update: if request.auth != null
+            && request.auth.uid == userId
+            && request.resource.data.ownerUid is string
+            && (collectionName != 'suppliers' && collectionName != 'stockLosses' && collectionName != 'purchases' && collectionName != 'supplierPayments' || hasActiveSubscription());
+          allow delete: if request.auth != null
+            && request.auth.uid == userId
+            && resource.data.ownerUid is string
+            && (collectionName != 'suppliers' && collectionName != 'stockLosses' && collectionName != 'purchases' && collectionName != 'supplierPayments' || hasActiveSubscription());
+        }
       }
     }
   }

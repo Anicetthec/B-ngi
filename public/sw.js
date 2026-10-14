@@ -1,5 +1,5 @@
-const CACHE_NAME = "bingi-shell-v2";
-const SHELL = ["/", "/icon.svg"];
+const CACHE_NAME = "bingi-shell-v4";
+const SHELL = ["/", "/icon.png", "/logo.jpeg", "/logo-trim.jpeg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL)));

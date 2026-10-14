@@ -1,11 +1,13 @@
 # Bĩngi — gestion de stock et des ventes
 
-Application de gestion de boutique, en français, installable comme PWA et pensée pour les commerces au Burkina Faso. L’offre gratuite fonctionne immédiatement sans compte avec IndexedDB (Dexie) et reste utilisable hors ligne. Une sauvegarde en ligne gratuite et facultative utilise Firebase Authentication anonyme et Cloud Firestore; le numéro saisi n’est pas vérifié et ne permet pas de retrouver une session sur un autre appareil.
+Application de gestion de boutique, en français, installable comme PWA et pensée pour les commerces au Burkina Faso. L’accès exige un compte avec numéro et code secret (sans SMS). Les données et opérations sont conservées localement et synchronisées quand le réseau est disponible.
 
 ## Fonctionnalités
 
 - Catalogue de produits, prix d’achat/de vente, seuils d’alerte et réapprovisionnement.
-- Enregistrement des ventes avec déduction du stock.
+- Ventes payées en espèces, Orange Money, Moov Money ou à crédit, avec création d’un crédit client relié à la vente.
+- Journal des achats lors du réapprovisionnement, coût moyen pondéré du stock, paiements et soldes dus aux fournisseurs (Premium).
+- Caisse journalière : fond de caisse, mouvements, encaissements et sorties par canal, clôture et écart entre solde attendu et espèces comptées.
 - Dépenses et historique complet des ventes accessibles gratuitement.
 - Bénéfice estimé du jour accessible gratuitement, calculé à partir des prix d’achat renseignés.
 - Reçus après vente (partage WhatsApp/impression), crédits clients avec paiements partiels et bilans détaillés réservés à Premium.
@@ -13,31 +15,32 @@ Application de gestion de boutique, en français, installable comme PWA et pens�
 - L’offre gratuite fonctionne sans compte; la limite gratuite est de 30 articles.
 - Premium à 1 000 FCFA/mois : reçus, crédits clients, bilans et plus de 30 articles. Activation du paiement gérée manuellement via WhatsApp.
 - Synchronisation hors ligne en file d’attente locale; envoi à Firestore au retour du réseau.
+- Bilans avec marge brute en %, meilleures ventes, stocks sans vente récente, rotation estimée, créances en retard et seuil de rentabilité estimé.
 
 ## Prérequis
 
 - Node.js 22 ou plus récent.
 - Un projet Firebase avec Cloud Firestore activé.
-- Firebase Authentication avec le fournisseur **Anonyme** activé.
+- Firebase Authentication avec le fournisseur **E-mail/Mot de passe** activé.
 
-L’utilisation locale gratuite ne demande ni compte ni numéro. La sauvegarde en ligne et la demande Premium utilisent une session Firebase anonyme créée après la saisie du numéro, sans SMS. Le numéro est enregistré comme contact non vérifié et ne permet pas de récupérer une session anonyme sur un nouvel appareil. Sans connexion à un compte, les données restent sur l’appareil; utilisez régulièrement l’export de sauvegarde pour éviter les pertes en cas de changement ou de panne de téléphone.
+Le formulaire de compte apparaît à chaque ouverture de l’application. Il accepte l’inscription ou la connexion avec un numéro et un code de 6 à 12 chiffres. Le code est géré par Firebase Authentication; le numéro est transformé en identifiant technique et n’est pas vérifié. Il faut mémoriser le code : aucun SMS, courriel de récupération ni code secret en clair ne sont utilisés. La connexion demande Internet à chaque ouverture avec le parcours actuel.
 
 ## Configuration Firebase / Firestore
 
 1. Créez un projet Firebase et une application Web dans la console Firebase.
 2. Dans **Firestore Database**, créez la base Cloud Firestore en mode production.
 3. Copiez `.env.example` vers `.env.local` et ajoutez les valeurs de l’application Web Firebase (`NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`, `NEXT_PUBLIC_FIREBASE_PROJECT_ID`, `NEXT_PUBLIC_FIREBASE_APP_ID`). Choisissez aussi l’identifiant de projet dans `.firebaserc`.
-4. Dans **Authentication > Sign-in method**, activez **Anonyme**. Aucun code SMS n’est utilisé pour créer le compte; le numéro saisi est un contact non vérifié.
+4. Dans **Authentication > Sign-in method**, activez **E-mail/Mot de passe**. Le numéro est converti en adresse technique `...@phone.bingi.app` pour que Firebase Auth puisse gérer le code sans envoyer d’e-mail ou de SMS. Activez aussi **Anonyme** uniquement si d’anciennes sessions anonymes doivent encore être utilisées.
 5. Déployez les règles d’accès Firestore :
 
    ```bash
    npm install
    firebase login
-   firebase use --add
+   firebase use zambo-6b504
    npm run firestore:deploy
    ```
 
-   Après saisie du numéro, Firebase Auth crée une session anonyme et un profil est créé dans `users/{uid}` avec `uid`, le numéro fourni et `estActif: false`. Les règles permettent au commerçant de créer son profil inactif, mais seul l’administrateur peut ensuite modifier `estActif`. Les données restent isolées dans les sous-collections de chaque UID; les sous-collections Premium `debts` et `debtPayments` sont inaccessibles tant que `estActif` n’est pas `true`.
+   À l’inscription, Firebase Auth crée l’utilisateur. Le profil Firestore `users/{uid}` enregistre le numéro, le nom de boutique et `estActif: false`; le code secret n’est pas écrit dans Firestore. Les règles interdisent à l’utilisateur de modifier `estActif`.
 
 6. Lancez l’application :
 
@@ -63,13 +66,15 @@ npm run build
 
 ## Offre Premium et validation des paiements
 
-Le commerçant peut continuer à utiliser les fonctions gratuites sans compte. Pour demander Premium ou activer la synchronisation en ligne, il saisit son numéro, sans mot de passe ni code SMS. Firebase Auth crée une session anonyme; l’application enregistre le numéro comme contact non vérifié et crée le profil Firestore `users/{uid}` avec `uid` et `estActif: false`. Lors d’une demande Premium, après l’enregistrement du profil et la synchronisation des données locales, Bĩngi ouvre automatiquement [le contact WhatsApp de Bĩngi](https://wa.me/message/SQXBCLHS6SBXN1) avec un message prérempli contenant l’UID Firebase. Les fonctionnalités gratuites restent accessibles pendant l’attente. Après vérification manuelle du paiement de 1 000 FCFA, l’administrateur ouvre le document correspondant dans Firestore et passe `estActif` à `true`. L’application vérifie le profil à la prochaine synchronisation et débloque Premium. Pour suspendre l’accès, repasser `estActif` à `false`. Ne faites jamais cette activation depuis le client : les règles Firestore interdisent à l’utilisateur de modifier ce champ.
+Un compte se retrouve sur un autre appareil avec le même numéro et le même code, avec Internet. Sans SMS, le numéro n’est pas vérifié et un code oublié ne peut pas être récupéré automatiquement. « Je veux activer Premium » ouvre [le contact WhatsApp de Bĩngi](https://wa.me/message/SQXBCLHS6SBXN1) avec le numéro de contact et l’UID Firebase préremplis; l’utilisateur doit appuyer sur Envoyer. Après vérification manuelle du paiement, l’administrateur passe `users/{uid}.estActif` à `true` dans Firestore.
 
 Premium donne accès aux reçus de vente (partage WhatsApp et impression), aux crédits clients et paiements partiels, aux bilans et rapports, ainsi qu’à plus de 30 articles. La sauvegarde et la synchronisation en ligne sont disponibles gratuitement après saisie d’un numéro, sans vérification SMS. Les opérations de paiement et d’abonnement doivent rester validées côté administration; le statut local de l’interface seul ne constitue pas une protection anti-fraude. Un compte en attente conserve l’accès à toutes les fonctions gratuites.
 
 ## Synchronisation et limites
 
-Les modifications sont d’abord enregistrées dans IndexedDB, puis synchronisées avec Firestore quand l’utilisateur est connecté et que l’appareil est en ligne, qu’il soit gratuit ou Premium. La sauvegarde en ligne gratuite est facultative : elle s’active dans Paramètres avec le numéro de téléphone, sans vérification SMS. Lors de la première connexion, les données locales sont copiées vers la session Firebase anonyme; la synchronisation reprend automatiquement au retour du réseau. Une session anonyme est liée à cet appareil et ne peut pas être retrouvée avec le numéro seul; le numéro n’est pas vérifié.
+Les produits, ventes, dépenses, crédits/paiements, clôtures et mouvements de caisse sont enregistrés dans IndexedDB puis synchronisés avec Firestore lorsque l’application est ouverte et le réseau disponible. Les fournisseurs, achats/règlements et pertes sont synchronisés avec Premium actif. Les ventes historiques sans mode de paiement sont considérées comme encaissées en espèces. Le coût du stock est recalculé par moyenne pondérée lors des achats; le bénéfice, la rotation et le seuil de rentabilité restent estimatifs, notamment si le stock initial ou des corrections n’ont pas été enregistrés. Après fermeture ou rechargement hors ligne, l’écran de connexion bloque l’accès : l’ouverture hors ligne n’est pas encore prise en charge.
+
+Les changements de fichiers TypeScript/React ne sont pas envoyés à Firestore : ils doivent être publiés séparément sur l’hébergeur de l’application. Les règles Firestore se déploient séparément avec `npm run firestore:deploy`.
 
 Le changement d’appareil d’un utilisateur gratuit se fait avec une sauvegarde JSON : téléchargez le fichier sur l’ancien téléphone, transférez-le, puis utilisez « Récupérer une sauvegarde » dans les paramètres du nouveau téléphone. Les mises à jour concurrentes du stock sur plusieurs appareils ne sont pas réconciliées automatiquement.
 
