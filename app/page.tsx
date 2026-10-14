@@ -1448,6 +1448,10 @@ export default function Home() {
           <span className="eyebrow">BĨNGI · GESTION DE BOUTIQUE</span>
           <h1>{authMode === "register" ? "Créer votre compte" : "Retrouver votre compte"}</h1>
           <p className="auth-description">{authMode === "register" ? "Inscrivez-vous avec votre numéro et un code secret. Aucun SMS n’est envoyé. Votre compte pourra être retrouvé sur un autre téléphone." : "Connectez-vous avec le même numéro et le code secret choisis à l’inscription."}</p>
+          <section className="auth-premium-card">
+            <div><span className="eyebrow">OPTION PREMIUM</span><strong>1 000 FCFA / mois</strong><p>Bilans détaillés, gestion des fournisseurs et jusqu’à 3 boutiques. Demande d’activation par WhatsApp après inscription.</p></div>
+            <button className="button button-whatsapp" type="button" onClick={() => { setAuthMode("register"); setModal("premium"); setAuthMessage(""); }}>Créer un compte et demander Premium ↗</button>
+          </section>
           <label>Numéro de téléphone
             <input autoFocus value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+226 70 00 00 00" inputMode="tel" autoComplete="tel" />
           </label>
@@ -1489,6 +1493,7 @@ export default function Home() {
         <aside className="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu principal" onClick={(event) => event.stopPropagation()}>
           <div className="mobile-drawer-heading"><div><strong>Menu principal</strong><span>{shopName || "Ma boutique"}</span></div><button className="mobile-drawer-close" onClick={() => setMobileMenuOpen(false)} aria-label="Fermer le menu">×</button></div>
           <nav aria-label="Rubriques de l’application">{navItems.map((item) => <button key={item.id} className={`mobile-drawer-link ${section === item.id ? "active" : ""}`} onClick={() => { setSection(item.id); setMobileMenuOpen(false); }}><span className="nav-icon">{item.icon}</span><span>{item.label}</span>{item.id === "debts" && overdueDebts.length > 0 && <span className="overdue-count">{overdueDebts.length}</span>}{item.premium && !premium && <span className="pro-tag">PRO</span>}</button>)}</nav>
+          <section className="mobile-premium-card"><strong>{premium ? "Premium est activé" : "Découvrez Premium"}</strong><span>{premium ? "Profitez de vos outils avancés." : "1 000 FCFA par mois · Activation via WhatsApp"}</span>{!premium && <button onClick={() => { setMobileMenuOpen(false); openPremiumRequest(); }}>Voir l’offre Premium ↗</button>}</section>
         </aside>
       </div>}
 

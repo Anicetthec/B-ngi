@@ -35,6 +35,11 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 .auth-card h1 { margin: 0; font: 800 clamp(32px, 3.4vw, 44px)/1.17 Manrope, sans-serif; letter-spacing: -.045em; }
 .auth-card h1 span { color: #6b7c73; }
 .auth-description { max-width: 405px; margin: 16px 0 32px; color: #7a8780; line-height: 1.7; }
+.auth-premium-card { display: grid; gap: 12px; margin: -13px 0 22px; padding: 15px; border: 1px solid #eadfbe; border-radius: 12px; background: linear-gradient(135deg, #fffdf7, #f8f2e5); }
+.auth-premium-card .eyebrow { display: block; color: #9a7834; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.auth-premium-card strong { display: block; margin-top: 5px; color: #314637; font-size: 19px; }
+.auth-premium-card p { margin: 5px 0 0; color: #718078; font-size: 13px; line-height: 1.5; }
+.auth-premium-card .button { width: 100%; min-height: 46px; white-space: normal; line-height: 1.25; }
 .auth-card label, .modal-form label, .settings-panel label { display: grid; gap: 8px; color: #34443c; font-size: 12px; font-weight: 600; }
 .phone-row, .code-row { display: flex; gap: 9px; margin-top: 9px; }
 .phone-row input, .code-row input { min-width: 0; flex: 1; }
@@ -337,6 +342,10 @@ tbody tr:hover { background: #f7faf7; }
   .mobile-drawer-link { width: 100%; min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid transparent; border-radius: 11px; color: #405248; background: #fff; text-align: left; font-size: 15px; font-weight: 600; }
   .mobile-drawer-link .nav-icon { width: 24px; min-width: 24px; color: #4d765b; font-size: 19px; text-align: center; }
   .mobile-drawer-link.active { border-color: #c9dfce; color: #174b38; background: #edf6ef; }
+  .mobile-premium-card { display: grid; gap: 9px; margin-top: 18px; padding: 15px; border: 1px solid #e9dfc1; border-radius: 13px; background: linear-gradient(135deg, #fffdf7, #f8f2e5); }
+  .mobile-premium-card strong { color: #354b39; font-size: 16px; }
+  .mobile-premium-card span { color: #788277; font-size: 13px; line-height: 1.45; }
+  .mobile-premium-card button { min-height: 44px; padding: 9px 12px; border: 0; border-radius: 9px; color: #fff; background: #22834d; text-align: center; font-size: 14px; font-weight: 700; }
   .mobile-drawer-link .pro-tag { display: inline-block; margin-left: auto; font-size: 10px; }
   .mobile-drawer-link .overdue-count { margin-left: auto; }
   .main-area { margin-left: 0; padding-bottom: env(safe-area-inset-bottom); }
