@@ -105,8 +105,8 @@ function emailForPhone(phone: string) {
 
 function whatsappActivationUrl(uid: string, shopName: string, phone: string, premiumRequest = true) {
   const message = premiumRequest
-    ? `Bonjour, je souhaite activer mon abonnement mensuel Bĩngi. Mon ID utilisateur Firebase est : ${uid}. Boutique : ${shopName || "Ma boutique"}. Numéro de téléphone : ${phone}.`
-    : `Bonjour, je viens de créer mon compte Bĩngi. Mon ID utilisateur Firebase est : ${uid}. Boutique : ${shopName || "Ma boutique"}. Numéro de téléphone : ${phone}.`;
+    ? `Bonjour, je souhaite activer mon abonnement mensuel Bĩngi. Mon identifiant de compte est : ${uid}. Boutique : ${shopName || "Ma boutique"}. Numéro de téléphone : ${phone}.`
+    : `Bonjour, je viens de créer mon compte Bĩngi. Mon identifiant de compte est : ${uid}. Boutique : ${shopName || "Ma boutique"}. Numéro de téléphone : ${phone}.`;
   return `https://wa.me/message/SQXBCLHS6SBXN1?text=${encodeURIComponent(message)}`;
 }
 
@@ -433,7 +433,7 @@ export default function Home() {
       } catch (error) {
         console.error("Could not load Firebase Firestore data", error);
         setSyncMessage("Données locales disponibles");
-        notify("error", "Impossible de joindre Firestore. Les données locales restent accessibles.");
+        notify("error", "La synchronisation en ligne a échoué. Les données enregistrées sur cet appareil restent accessibles.");
       } finally {
         if (!cancelled) {
           await refreshLocal(activeShopKey);
@@ -527,7 +527,7 @@ export default function Home() {
   async function createAccountWithoutSms() {
     const currentAuth = auth;
     const normalizedPhone = normalizeBurkinaPhone(phone);
-    if (!currentAuth) return setAuthMessage("La création de compte Firebase n’est pas disponible pour le moment.");
+    if (!currentAuth) return setAuthMessage("La création de compte n’est pas disponible pour le moment.");
     if (!normalizedPhone) return setAuthMessage("Saisissez un numéro valide avec l’indicatif +226, par exemple +226 70 00 00 00.");
     if (!/^\d{6,12}$/.test(accountPassword)) return setAuthMessage("Le code secret doit contenir de 6 à 12 chiffres.");
     setPhone(normalizedPhone);
@@ -568,10 +568,10 @@ export default function Home() {
       await syncPending(targetUid, isActivePremium(cloudShop.shop));
       await refreshLocal(targetUid);
       setAuthMessage(modal === "cloud-sync" || modal === null
-        ? authMode === "login" ? "Connexion réussie. Vos données sont synchronisées en ligne." : "Compte Firebase créé. Vos données sont synchronisées en ligne."
+        ? authMode === "login" ? "Connexion réussie. Vos données sont synchronisées en ligne." : "Compte créé. Vos données sont synchronisées en ligne."
         : authMode === "login" ? "Connexion réussie. Vous pouvez envoyer votre demande Premium sur WhatsApp." : "Compte créé. Votre abonnement attend son activation via WhatsApp.");
       notify("success", modal === "cloud-sync" || modal === null
-        ? authMode === "login" ? "Connexion réussie et données synchronisées." : "Compte Firebase créé et données synchronisées."
+        ? authMode === "login" ? "Connexion réussie et données synchronisées." : "Compte créé et données synchronisées."
         : authMode === "login" ? "Connexion réussie." : "Compte créé. Envoyez votre UID sur WhatsApp pour demander l’activation Premium.");
       if (modal === "premium") {
         window.location.assign(whatsappActivationUrl(targetUid, pendingName, normalizedPhone));
@@ -586,8 +586,8 @@ export default function Home() {
           : code === "auth/weak-password"
             ? "Choisissez un code d’au moins 6 chiffres."
             : code === "auth/operation-not-allowed"
-              ? "Activez le fournisseur E-mail/Mot de passe dans Firebase Authentication."
-              : "Impossible de créer le compte ou d’enregistrer vos données. Vérifiez Firebase et votre connexion.");
+              ? "La création de compte est momentanément indisponible. Réessayez plus tard."
+              : "Impossible de créer le compte ou d’enregistrer vos données. Vérifiez votre connexion et réessayez.");
     } finally {
       migratingRef.current = false;
       setMigrationBusy(false);
@@ -1443,8 +1443,8 @@ export default function Home() {
           <p className="auth-note">Sans SMS, le numéro n’est pas vérifié. Mémorisez votre code : aucune récupération automatique n’est disponible.</p>
           {authMessage && <p className="auth-message" role="alert">{authMessage}</p>}
           {firebaseConfigured
-            ? <button className="button button-primary local-button" disabled={authBusy || !phone || !accountPassword} onClick={() => void createAccountWithoutSms()}>{authBusy ? "Connexion à Firebase…" : authMode === "register" ? "Créer mon compte" : "Me connecter"}</button>
-            : <div className="setup-notice"><strong>Firebase n’est pas configuré.</strong><span>Vérifiez les clés Firebase dans .env.local avant de créer un compte.</span></div>}
+            ? <button className="button button-primary local-button" disabled={authBusy || !phone || !accountPassword} onClick={() => void createAccountWithoutSms()}>{authBusy ? "Connexion…" : authMode === "register" ? "Créer mon compte" : "Me connecter"}</button>
+            : <div className="setup-notice"><strong>La création de compte est indisponible.</strong><span>Réessayez plus tard ou continuez sans compte sur cet appareil.</span></div>}
           <button className="text-button local-button" onClick={() => { setAuthMode(authMode === "register" ? "login" : "register"); setAuthMessage(""); }}>{authMode === "register" ? "J’ai déjà un compte — me connecter" : "Créer un compte"}</button>
         </section>
         <aside className="auth-aside"><div className="aside-copy"><span>VOS VENTES ET VOTRE STOCK</span><h2>Votre boutique vous suit, même sans connexion.</h2></div></aside>
@@ -1467,7 +1467,7 @@ export default function Home() {
         </nav>
         <div className="sidebar-bottom">
           <div className={`plan-card ${premium ? "plan-active" : ""}`}><div className="plan-card-top"><span>{premium ? "✦ PREMIUM" : "OFFRE GRATUITE"}</span><span>{premium ? "●" : "↗"}</span></div><strong>{premium ? "Votre boutique est Premium" : "Les outils essentiels sont gratuits"}</strong><p>{premium ? "Merci de soutenir Bĩngi." : "Stock, ventes et sauvegarde en ligne gratuite."}</p>{!premium && <button onClick={() => setSection("settings")}>Voir Premium <span>→</span></button>}</div>
-          <div className="profile-row"><div className="profile-avatar">{(shop?.phone ?? user?.phoneNumber)?.slice(-2) ?? "Z"}</div><div className="profile-info"><strong>{user ? shop?.phone ?? user.phoneNumber ?? "Compte Firebase" : "Sans compte"}</strong><small>{user ? (premium ? "Compte Premium" : "Compte en ligne gratuit") : "Données sur cet appareil"}</small></div>{user && !user.isAnonymous && <button className="more-button" aria-label="Déconnexion" title="Déconnecter le compte en ligne" onClick={async () => { if (auth) await signOut(auth); }}>⋯</button>}</div>
+          <div className="profile-row"><div className="profile-avatar">{(shop?.phone ?? user?.phoneNumber)?.slice(-2) ?? "Z"}</div><div className="profile-info"><strong>{user ? shop?.phone ?? user.phoneNumber ?? "Compte connecté" : "Sans compte"}</strong><small>{user ? (premium ? "Compte Premium" : "Compte en ligne gratuit") : "Données sur cet appareil"}</small></div>{user && !user.isAnonymous && <button className="more-button" aria-label="Déconnexion" title="Déconnecter le compte en ligne" onClick={async () => { if (auth) await signOut(auth); }}>⋯</button>}</div>
         </div>
       </aside>
 
@@ -1556,15 +1556,15 @@ export default function Home() {
               <div className="backup-guide"><strong>Pour changer de téléphone</strong><span>1. Téléchargez la sauvegarde sur cet appareil.</span><span>2. Envoyez le fichier sur le nouveau téléphone.</span><span>3. Dans Bĩngi, ouvrez Paramètres puis « Récupérer une sauvegarde ».</span></div>
               <div className="settings-divider" />
               <h2>Sauvegarde en ligne</h2>
-              <p>{user ? `Ce compte Firebase ${user.isAnonymous ? "anonyme" : "connecté"} synchronise vos données. Le numéro ${shop?.phone ?? user.phoneNumber ?? "de contact"} n’est pas un moyen de connexion et ne permet pas de retrouver le compte sur un autre téléphone.` : "Activez la sauvegarde en ligne pour retrouver vos données sur cet appareil."}</p>
+              <p>{user ? `Votre compte ${user.isAnonymous ? "anonyme" : "connecté"} synchronise vos données. Le numéro ${shop?.phone ?? user.phoneNumber ?? "de contact"} n’est pas un moyen de connexion et ne permet pas de retrouver le compte sur un autre téléphone.` : "Activez la sauvegarde en ligne pour retrouver vos données sur cet appareil."}</p>
               {user
                 ? <><button className="button button-outline" disabled={syncing} onClick={() => void synchronize()}>{syncing ? "Sauvegarde en cours…" : "↻ Sauvegarder maintenant"}</button></>
                 : firebaseConfigured
                   ? <button className="button button-outline" onClick={openCloudSync}>Activer la sauvegarde gratuite →</button>
-                  : <p className="setup-notice"><strong>Sauvegarde en ligne indisponible.</strong><span>La configuration Firebase de l’application est nécessaire. Vos données restent enregistrées sur cet appareil.</span></p>}
+                  : <p className="setup-notice"><strong>Sauvegarde en ligne indisponible.</strong><span>Le service de sauvegarde est momentanément indisponible. Vos données restent enregistrées sur cet appareil.</span></p>}
               <div className="settings-divider" />
               <h2>Compte et synchronisation</h2>
-              <p>{user ? `Compte connecté : ${shop?.phone ?? "numéro enregistré"} · UID ${user.uid}. État : ${syncing ? "synchronisation en cours" : syncMessage}.` : "Aucun compte en ligne n’est connecté. Les données sont conservées sur cet appareil."}</p>
+              <p>{user ? `Compte connecté : ${shop?.phone ?? "numéro enregistré"} · Identifiant ${user.uid}. État : ${syncing ? "synchronisation en cours" : syncMessage}.` : "Aucun compte en ligne n’est connecté. Les données sont conservées sur cet appareil."}</p>
               {user && <button className="button button-outline" onClick={async () => { if (auth) await signOut(auth); }}>Se déconnecter</button>}
               <div className="settings-divider" />
               <h2>Installer Bĩngi</h2>
@@ -1573,7 +1573,7 @@ export default function Home() {
             </section>
             <section className={`premium-card ${premium ? "premium-card-on" : ""}`}>
               <span className="premium-spark">✦</span><span className="eyebrow">{premium ? "VOTRE ABONNEMENT" : "BĨNGI PREMIUM"}</span>
-              {user && shop?.estActif !== true && <div className="payment-help"><strong>Votre abonnement attend son activation</strong><span>Après vérification de votre paiement, l’administrateur activera votre compte dans Firebase. Votre UID : <code>{user.uid}</code>.</span>{accountActivationUrl && <a className="button button-whatsapp request-whatsapp" href={accountActivationUrl} target="_blank" rel="noreferrer">Activer mon abonnement via WhatsApp ↗</a>}<button className="button button-outline" onClick={() => void synchronize()} disabled={syncing}>{syncing ? "Vérification…" : "Vérifier si mon abonnement est activé"}</button></div>}
+              {user && shop?.estActif !== true && <div className="payment-help"><strong>Votre abonnement attend son activation</strong><span>Après vérification de votre paiement, l’administrateur activera votre compte. Votre identifiant : <code>{user.uid}</code>.</span>{accountActivationUrl && <a className="button button-whatsapp request-whatsapp" href={accountActivationUrl} target="_blank" rel="noreferrer">Activer mon abonnement via WhatsApp ↗</a>}<button className="button button-outline" onClick={() => void synchronize()} disabled={syncing}>{syncing ? "Vérification…" : "Vérifier si mon abonnement est activé"}</button></div>}
               <h2>{premium ? "Votre boutique est Premium" : "Des outils avancés pour votre boutique."}</h2>
               <p>{premium ? `Votre accès est actif${shop?.subscriptionExpiresAt ? ` jusqu’au ${dayLabel(shop.subscriptionExpiresAt)}` : ""}. Vous pouvez gérer jusqu’à 3 boutiques avec des stocks et bilans séparés.` : "La gestion quotidienne et la sauvegarde en ligne restent gratuites. Premium ajoute des outils avancés et jusqu’à 3 boutiques."}</p>
               {premium && <div className="shop-management"><strong>{shops.length} / 3 boutiques utilisées</strong>{shops.length < 3 ? <button className="button button-primary" onClick={() => void createBoutique()}>＋ Créer une boutique</button> : <span>Votre compte utilise déjà ses 3 boutiques.</span>}</div>}
@@ -1626,7 +1626,7 @@ export default function Home() {
             ? <>
                 {shop?.estActif === true
                   ? <div className="payment-help"><strong>Renouveler mon abonnement</strong><span>Envoyez votre demande sur WhatsApp. Nous vous confirmerons les instructions de paiement.</span></div>
-                  : <div className="payment-help"><strong>Activation de l’abonnement en attente</strong><span>Votre compte Firebase est créé. Envoyez votre UID par WhatsApp pour demander l’activation après paiement.</span><span>Votre UID : <code>{user.uid}</code></span></div>}
+                  : <div className="payment-help"><strong>Activation de l’abonnement en attente</strong><span>Votre compte est créé. Envoyez votre identifiant par WhatsApp pour demander l’activation après paiement.</span><span>Votre identifiant : <code>{user.uid}</code></span></div>}
                 <p className="verified-phone">Numéro de contact (non vérifié) : {shop?.phone ?? user.phoneNumber ?? "non renseigné"}</p>
                 {authMessage && <p className="auth-message" role="status">{authMessage}</p>}
                 <a className="button button-whatsapp request-whatsapp" href={accountActivationUrl} target="_blank" rel="noreferrer">Activer mon abonnement via WhatsApp ↗</a>
@@ -1642,15 +1642,15 @@ export default function Home() {
                 {authMessage && !user && <p className="auth-message" role="status">{authMessage}</p>}
                 {firebaseConfigured
                   ? <button className="button button-primary" disabled={authBusy || migrationBusy || !phone || !accountPassword} onClick={() => void createAccountWithoutSms()}>{authBusy ? "Connexion…" : migrationBusy ? "Préparation de la boutique…" : authMode === "login" ? "Me connecter et ouvrir WhatsApp" : "Créer mon compte et ouvrir WhatsApp"}</button>
-                  : <div className="setup-notice"><strong>La création de compte n’est pas disponible.</strong><span>Activez E-mail/Mot de passe dans Firebase Authentication.</span></div>}
+                  : <div className="setup-notice"><strong>La création de compte n’est pas disponible.</strong><span>Réessayez plus tard ou continuez gratuitement sur cet appareil.</span></div>}
                 <button className="text-button" onClick={() => { setAuthMode(authMode === "register" ? "login" : "register"); setAuthMessage(""); }}>{authMode === "register" ? "J’ai déjà un compte — me connecter" : "Créer un compte"}</button>
-                <p className="whatsapp-hint">{firebaseConfigured ? (normalizedPhone ? "Le numéro sert uniquement de contact; l’activation se fait après vérification WhatsApp." : "Saisissez un numéro burkinabè valide pour continuer.") : "Configurez Firebase pour créer votre compte et obtenir votre UID d’activation."}</p>
+                <p className="whatsapp-hint">{firebaseConfigured ? (normalizedPhone ? "Le numéro sert uniquement de contact; l’activation se fait après vérification WhatsApp." : "Saisissez un numéro burkinabè valide pour continuer.") : "La création de compte est momentanément indisponible. Réessayez plus tard."}</p>
                 <div className="payment-help"><strong>Comment se passe le paiement ?</strong><span>N’envoyez pas d’argent avant d’avoir reçu les instructions via WhatsApp.</span></div>
                 <button className="text-button premium-cancel" onClick={() => setModal(null)}>Pas maintenant — continuer gratuitement</button>
               </>}
         </div>}
         {modal === "cloud-sync" && <div className="premium-request">
-          <p className="request-intro">Synchronisez gratuitement votre stock et vos ventes avec Firestore. Pour transférer les données vers un nouveau téléphone, téléchargez une sauvegarde puis restaurez-la sur le nouvel appareil.</p>
+          <p className="request-intro">Synchronisez gratuitement votre stock et vos ventes en ligne. Pour transférer les données vers un nouveau téléphone, téléchargez une sauvegarde puis restaurez-la sur le nouvel appareil.</p>
           {(!user || user.isAnonymous) && <>
             <label>Votre numéro de téléphone<input autoFocus value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+226 70 00 00 00" inputMode="tel" autoComplete="tel" /></label>
             <label>Code secret<input type="password" value={accountPassword} onChange={(event) => setAccountPassword(event.target.value.replace(/\D/g, "").slice(0, 12))} placeholder="6 à 12 chiffres" inputMode="numeric" autoComplete={authMode === "login" ? "current-password" : "new-password"} /></label>
@@ -1749,5 +1749,5 @@ function PremiumGate({ feature, onUpgrade, accountInactive, userId, whatsappUrl,
   onRefresh: () => void;
   refreshing: boolean;
 }) {
-  return <section className="locked-panel"><span className="lock-icon">✦</span><span className="eyebrow">{accountInactive ? "ACTIVATION EN ATTENTE" : "FONCTIONNALITÉ PREMIUM"}</span><h2>{accountInactive ? "Votre abonnement n’est pas encore activé." : "Débloquez ces outils pour votre boutique."}</h2><p>{feature}</p><p>{accountInactive ? "Après vérification de votre paiement, l’administrateur activera votre abonnement. L’offre gratuite reste disponible pendant l’attente." : "Premium coûte 1 000 FCFA pour un mois. Vous pouvez continuer à enregistrer vos ventes gratuitement."}</p>{accountInactive && userId && <p>UID Firebase : <code>{userId}</code></p>}{accountInactive && whatsappUrl ? <a className="button button-whatsapp" href={whatsappUrl} target="_blank" rel="noreferrer">Activer mon abonnement via WhatsApp ↗</a> : !accountInactive && <button className="button button-primary" onClick={onUpgrade}>Découvrir Premium →</button>}{accountInactive && <button className="button button-outline" onClick={onRefresh} disabled={refreshing}>{refreshing ? "Vérification…" : "Vérifier mon activation"}</button>}</section>;
+  return <section className="locked-panel"><span className="lock-icon">✦</span><span className="eyebrow">{accountInactive ? "ACTIVATION EN ATTENTE" : "FONCTIONNALITÉ PREMIUM"}</span><h2>{accountInactive ? "Votre abonnement n’est pas encore activé." : "Débloquez ces outils pour votre boutique."}</h2><p>{feature}</p><p>{accountInactive ? "Après vérification de votre paiement, l’administrateur activera votre abonnement. L’offre gratuite reste disponible pendant l’attente." : "Premium coûte 1 000 FCFA pour un mois. Vous pouvez continuer à enregistrer vos ventes gratuitement."}</p>{accountInactive && userId && <p>Identifiant du compte : <code>{userId}</code></p>}{accountInactive && whatsappUrl ? <a className="button button-whatsapp" href={whatsappUrl} target="_blank" rel="noreferrer">Activer mon abonnement via WhatsApp ↗</a> : !accountInactive && <button className="button button-primary" onClick={onUpgrade}>Découvrir Premium →</button>}{accountInactive && <button className="button button-outline" onClick={onRefresh} disabled={refreshing}>{refreshing ? "Vérification…" : "Vérifier mon activation"}</button>}</section>;
 }
