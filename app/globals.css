@@ -366,3 +366,48 @@ tbody tr:hover { background: #f7faf7; }
   input, select, textarea { font-size: 16px; }
   .summary-line { font-size: 14px; }
 }
+
+/* Keep the complete global report reachable and readable on phone screens. */
+@media (max-width: 600px) {
+  .report-page, .report-page > *, .report-page .panel, .report-grid, .report-grid > * { width: 100%; min-width: 0; max-width: 100%; }
+  .report-page { gap: 12px; }
+  .report-mobile-nav { position: sticky; top: 0; z-index: 4; display: flex; gap: 7px; width: calc(100% + 22px); margin: -4px -11px 0; padding: 9px 11px; overflow-x: auto; border-bottom: 1px solid #e5ece6; background: #f5f8f4f5; scrollbar-width: thin; }
+  .report-mobile-nav a { flex: 0 0 auto; padding: 9px 11px; border: 1px solid #dce7de; border-radius: 20px; color: #28533a; background: #fff; font-size: 12px; font-weight: 700; text-decoration: none; }
+  .report-page [id^="report-"] { scroll-margin-top: 64px; }
+  .report-page .report-toolbar { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
+  .report-page .report-toolbar > div:first-child { min-width: 0; }
+  .report-page .report-controls { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 8px; }
+  .report-page .report-controls .report-date { display: grid; min-width: 0; gap: 5px; font-size: 12px; }
+  .report-page .report-controls .report-date select,
+  .report-page .report-controls .report-date input { width: 100%; max-width: none; min-width: 0; min-height: 42px; }
+  .report-page .report-controls .button { width: 100%; min-width: 0; min-height: 42px; padding: 5px; white-space: normal; line-height: 1.2; }
+  .report-page .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .report-page .metric-card { min-width: 0; min-height: 120px; padding: 11px; overflow-wrap: anywhere; }
+  .report-page .metric-label, .report-page .metric-hint { min-height: 0; line-height: 1.35; }
+  .report-page .metric-value { max-width: 100%; line-height: 1.2; overflow-wrap: anywhere; }
+  .report-page .summary-line { align-items: flex-start; gap: 8px; line-height: 1.4; }
+  .report-page .summary-line strong { max-width: 48%; text-align: right; overflow-wrap: anywhere; }
+  .report-page .report-summary { padding: 12px; }
+  .report-page .report-explainer { padding-right: 12px; padding-left: 12px; font-size: 12px; line-height: 1.5; }
+  .report-page .report-sales-table .table-wrap, .report-page .report-products-table { overflow: visible; padding: 0 10px 12px; }
+  .report-page .report-sales-table table, .report-page .report-products-table table { display: block; width: 100%; min-width: 0; white-space: normal; }
+  .report-page .report-sales-table thead, .report-page .report-products-table thead { display: none; }
+  .report-page .report-sales-table tbody, .report-page .report-products-table tbody { display: grid; gap: 9px; }
+  .report-page .report-sales-table tr, .report-page .report-products-table tr { display: grid; padding: 8px 10px; border: 1px solid #e8eee9; border-radius: 9px; background: #fff; }
+  .report-page .report-sales-table td, .report-page .report-products-table td { display: flex; justify-content: space-between; gap: 10px; min-width: 0; padding: 8px 0; border-top: 1px solid #eff2ef; text-align: right; white-space: normal; overflow-wrap: anywhere; }
+  .report-page .report-sales-table td:first-child, .report-page .report-products-table td:first-child { border-top: 0; color: #315c49; font-weight: 700; }
+  .report-page .report-sales-table td::before, .report-page .report-products-table td::before { flex: 0 0 42%; color: #738178; font-size: 11px; font-weight: 600; text-align: left; }
+  .report-page .report-sales-table td:nth-child(1)::before { content: "Référence"; }
+  .report-page .report-sales-table td:nth-child(2)::before { content: "Date"; }
+  .report-page .report-sales-table td:nth-child(3)::before { content: "Articles"; }
+  .report-page .report-sales-table td:nth-child(4)::before { content: "Montant"; }
+  .report-page .report-sales-table td:nth-child(5)::before { content: "Paiement"; }
+  .report-page .report-sales-table td:nth-child(6)::before { content: "Statut"; }
+  .report-page .report-sales-table td:nth-child(7)::before { content: "Reçu"; }
+  .report-page .report-products-table td:nth-child(1)::before { content: "Article"; }
+  .report-page .report-products-table td:nth-child(2)::before { content: "Quantité vendue"; }
+  .report-page .report-products-table td:nth-child(3)::before { content: "Chiffre d’affaires"; }
+  .report-page .report-products-table td:nth-child(4)::before { content: "Marge"; }
+  .report-page .report-products-table td:nth-child(5)::before { content: "Marge bénéficiaire"; }
+  .report-page .report-products-table td:nth-child(6)::before { content: "Rotation estimée"; }
+}
