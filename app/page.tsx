@@ -311,8 +311,8 @@ export default function Home() {
       const profilePendingKey = `zambo-shop-pending:${uid}`;
       if (localStorage.getItem(profilePendingKey) === "true") {
         await saveShopProfile(uid, {
-          name: localStorage.getItem(`zambo-shop-name:${uid}`) || shopName || "Ma boutique",
-          currency: localStorage.getItem(`zambo-currency:${uid}`) || currency || CURRENCY,
+          name: localStorage.getItem(`zambo-shop-name:${uid}`) || "Ma boutique",
+          currency: localStorage.getItem(`zambo-currency:${uid}`) || CURRENCY,
           phone: localStorage.getItem(`zambo-shop-phone:${uid}`) || undefined,
         });
         localStorage.removeItem(profilePendingKey);
@@ -320,8 +320,8 @@ export default function Home() {
       let initialCloud = await loadCloudData(uid);
       if (!initialCloud.shop) {
         await saveShopProfile(uid, {
-          name: localStorage.getItem(`zambo-shop-name:${uid}`) || shopName || "Ma boutique",
-          currency: localStorage.getItem(`zambo-currency:${uid}`) || currency || CURRENCY,
+          name: localStorage.getItem(`zambo-shop-name:${uid}`) || "Ma boutique",
+          currency: localStorage.getItem(`zambo-currency:${uid}`) || CURRENCY,
           phone: localStorage.getItem(`zambo-shop-phone:${uid}`) || undefined,
         });
         initialCloud = await loadCloudData(uid);
@@ -329,8 +329,6 @@ export default function Home() {
       if (initialCloud.shop) {
         setShop(initialCloud.shop);
         localStorage.setItem(`zambo-shop-profile:${uid}`, JSON.stringify(initialCloud.shop));
-        setShopName(initialCloud.shop.name);
-        setCurrency(initialCloud.shop.currency);
       }
       const counts = await syncPending(uid, isActivePremium(initialCloud.shop));
       const cloudShop = await loadCloudData(uid);
@@ -338,8 +336,6 @@ export default function Home() {
         const savedShop = cloudShop.shop;
         setShop(savedShop);
         localStorage.setItem(`zambo-shop-profile:${uid}`, JSON.stringify(savedShop));
-        setShopName(savedShop.name);
-        setCurrency(savedShop.currency);
       }
       await refreshLocal(uid);
       setSyncMessage("Synchronisé");
@@ -351,7 +347,7 @@ export default function Home() {
     } finally {
       setSyncing(false);
     }
-  }, [currency, notify, ownerUid, refreshLocal, shopName, user]);
+  }, [notify, ownerUid, refreshLocal, user]);
 
   useEffect(() => {
     let cancelled = false;
@@ -623,23 +619,40 @@ export default function Home() {
     if (!name) return notify("error", "Saisissez le nom de votre boutique.");
     setShop({ ...(shop ?? { ownerUid, subscriptionStatus: "FREE" }), name, currency });
     const updatedShop = { ...(shop ?? { ownerUid, subscriptionStatus: "FREE" as const }), name, currency };
-    const updatedShops = shops.map((item) => item.ownerUid === ownerUid ? { ...item, name, currency } : item);
+    const updatedShops = shops.some((item) => item.ownerUid === ownerUid)
+      ? shops.map((item) => item.ownerUid === ownerUid ? { ...item, name, currency } : item)
+      : [...shops, updatedShop];
     setShops(updatedShops);
     if (user) localStorage.setItem(`zambo-shops:${user.uid}`, JSON.stringify(updatedShops));
     localStorage.setItem(`zambo-shop-profile:${ownerUid}`, JSON.stringify(updatedShop));
     localStorage.setItem(`zambo-shop-name:${ownerUid}`, name);
     localStorage.setItem(`zambo-currency:${ownerUid}`, currency);
     if (user && navigator.onLine) {
+      setSyncing(true);
       try {
         await saveShopProfile(ownerUid, { name, currency });
-        localStorage.removeItem(`zambo-shop-pending:${ownerUid}`);
         const response = await loadCloudData(ownerUid);
-        if (response.shop) setShop(response.shop);
+        const savedProfile = response.shop ?? updatedShop;
+        const confirmedProfile = { ...savedProfile, name, currency };
+        setShop(confirmedProfile);
+        setShops((current) => current.some((item) => item.ownerUid === ownerUid)
+          ? current.map((item) => item.ownerUid === ownerUid ? { ...item, name, currency } : item)
+          : [...current, confirmedProfile]);
+        localStorage.setItem(`zambo-shop-profile:${ownerUid}`, JSON.stringify(confirmedProfile));
+        localStorage.setItem(`zambo-shops:${user.uid}`, JSON.stringify(updatedShops));
+        localStorage.removeItem(`zambo-shop-pending:${ownerUid}`);
+        setSyncMessage("Nom synchronisé en ligne");
       } catch (error) {
         console.error("Could not save shop profile", error);
         localStorage.setItem(`zambo-shop-pending:${ownerUid}`, "true");
-        notify("error", "Nom enregistré localement, mais non synchronisé avec la base.");
+        setSyncMessage("Synchronisation du nom en attente");
+        const code = (error as { code?: string })?.code;
+        notify("error", code === "permission-denied"
+          ? "Le serveur refuse l’écriture du profil. Les règles de sécurité en ligne doivent autoriser la modification du nom."
+          : "Le nom est gardé sur cet appareil, mais la sauvegarde en ligne a échoué. Vérifiez la connexion puis réessayez.");
         return;
+      } finally {
+        setSyncing(false);
       }
     } else if (user) {
       localStorage.setItem(`zambo-shop-pending:${ownerUid}`, "true");
