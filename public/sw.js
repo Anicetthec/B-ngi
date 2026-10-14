@@ -1,4 +1,4 @@
-const CACHE_NAME = "bingi-shell-v4";
+const CACHE_NAME = "bingi-shell-v5";
 const SHELL = ["/", "/icon.png", "/logo.jpeg", "/logo-trim.jpeg"];
 
 self.addEventListener("install", (event) => {

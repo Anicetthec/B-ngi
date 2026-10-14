@@ -40,6 +40,7 @@ const navItems: { id: Section; label: string; icon: string; premium?: boolean }[
   { id: "reports", label: "Bilan global", icon: "▥" },
   { id: "settings", label: "Paramètres", icon: "⚙" },
 ];
+const mobilePrimarySections: Section[] = ["dashboard", "products", "sales", "reports", "settings"];
 
 function money(amount: number, currency = CURRENCY) {
   const label = currency === "XOF" || currency === "XAF" ? "FCFA" : currency;
@@ -136,6 +137,7 @@ export default function Home() {
   const [authBusy, setAuthBusy] = useState(false);
   const [authMessage, setAuthMessage] = useState("");
   const [section, setSection] = useState<Section>("dashboard");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shopName, setShopName] = useState("");
   const [currency, setCurrency] = useState(CURRENCY);
   const [shop, setShop] = useState<ShopProfile | null>(null);
@@ -1464,6 +1466,15 @@ export default function Home() {
             </button>
           ))}
         </nav>
+        <nav className="mobile-main-nav" aria-label="Navigation mobile">
+          {navItems.filter((item) => mobilePrimarySections.includes(item.id)).map((item) => (
+            <button key={item.id} className={`mobile-nav-link ${section === item.id ? "active" : ""}`} onClick={() => { setSection(item.id); setMobileMenuOpen(false); }}>
+              <span className="nav-icon">{item.icon}</span><span className="mobile-nav-label">{item.id === "products" ? "Stock" : item.id === "sales" ? "Vente" : item.id === "reports" ? "Bilan" : item.label}</span>
+            </button>
+          ))}
+          <button className={`mobile-nav-link ${mobileMenuOpen || !mobilePrimarySections.includes(section) ? "active" : ""}`} aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((open) => !open)}><span className="nav-icon">☰</span><span className="mobile-nav-label">Plus</span></button>
+        </nav>
+        {mobileMenuOpen && <div className="mobile-menu-backdrop" onClick={() => setMobileMenuOpen(false)}><section className="mobile-menu-sheet" role="dialog" aria-modal="true" aria-label="Autres rubriques" onClick={(event) => event.stopPropagation()}><div className="mobile-menu-heading"><div><strong>Autres rubriques</strong><small>Choisissez une page</small></div><button className="close-button" onClick={() => setMobileMenuOpen(false)} aria-label="Fermer le menu">×</button></div><div className="mobile-menu-grid">{navItems.filter((item) => !mobilePrimarySections.includes(item.id)).map((item) => <button key={item.id} className={`mobile-menu-item ${section === item.id ? "active" : ""}`} onClick={() => { setSection(item.id); setMobileMenuOpen(false); }}><span className="nav-icon">{item.icon}</span><span>{item.label}</span>{item.id === "debts" && overdueDebts.length > 0 && <span className="overdue-count">{overdueDebts.length}</span>}{item.premium && !premium && <span className="pro-tag">PRO</span>}</button>)}</div></section></div>}
         <div className="sidebar-bottom">
           <div className={`plan-card ${premium ? "plan-active" : ""}`}><div className="plan-card-top"><span>{premium ? "✦ PREMIUM" : "OFFRE GRATUITE"}</span><span>{premium ? "●" : "↗"}</span></div><strong>{premium ? "Votre boutique est Premium" : "Les outils essentiels sont gratuits"}</strong><p>{premium ? "Merci de soutenir Bĩngi." : "Stock, ventes et sauvegarde en ligne gratuite."}</p>{!premium && <button onClick={() => setSection("settings")}>Voir Premium <span>→</span></button>}</div>
           <div className="profile-row"><div className="profile-avatar">{(shop?.phone ?? user?.phoneNumber)?.slice(-2) ?? "Z"}</div><div className="profile-info"><strong>{user ? shop?.phone ?? user.phoneNumber ?? "Compte Firebase" : "Sans compte"}</strong><small>{user ? (premium ? "Compte Premium" : "Compte en ligne gratuit") : "Données sur cet appareil"}</small></div>{user && !user.isAnonymous && <button className="more-button" aria-label="Déconnexion" title="Déconnecter le compte en ligne" onClick={async () => { if (auth) await signOut(auth); }}>⋯</button>}</div>
