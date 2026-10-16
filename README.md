@@ -1,4 +1,4 @@
-# Bĩngi — gestion de stock et des ventes
+# Bingii — gestion de stock et des ventes
 
 Application de gestion de boutique, en français, installable comme PWA et pensée pour les commerces au Burkina Faso. L’accès exige un compte avec numéro et code secret (sans SMS). Les données et opérations sont conservées localement et synchronisées quand le réseau est disponible.
 
@@ -13,7 +13,7 @@ Application de gestion de boutique, en français, installable comme PWA et pens�
 - Reçus après vente (partage WhatsApp/impression), crédits clients avec paiements partiels et bilans détaillés réservés à Premium.
 - Export/import JSON avec rappel de sauvegarde guidé.
 - L’offre gratuite fonctionne sans compte; la limite gratuite est de 30 articles.
-- Premium à 1 000 FCFA/mois : reçus, crédits clients, bilans et plus de 30 articles. Activation du paiement gérée manuellement via WhatsApp.
+- Premium à 2 000 FCFA/mois : reçus, crédits clients, bilans et plus de 30 articles. Activation du paiement gérée manuellement via WhatsApp.
 - Synchronisation hors ligne en file d’attente locale; envoi à Firestore au retour du réseau.
 - Bilans avec marge brute en %, meilleures ventes, stocks sans vente récente, rotation estimée, créances en retard et seuil de rentabilité estimé.
 
@@ -66,7 +66,7 @@ npm run build
 
 ## Offre Premium et validation des paiements
 
-Un compte se retrouve sur un autre appareil avec le même numéro et le même code, avec Internet. Sans SMS, le numéro n’est pas vérifié et un code oublié ne peut pas être récupéré automatiquement. « Je veux activer Premium » ouvre [le contact WhatsApp de Bĩngi](https://wa.me/message/SQXBCLHS6SBXN1) avec le numéro de contact et l’UID Firebase préremplis; l’utilisateur doit appuyer sur Envoyer. Après vérification manuelle du paiement, l’administrateur passe `users/{uid}.estActif` à `true` dans Firestore.
+Un compte se retrouve sur un autre appareil avec le même numéro et le même code, avec Internet. Sans SMS, le numéro n’est pas vérifié et un code oublié ne peut pas être récupéré automatiquement. « Je veux activer Premium » ouvre [le contact WhatsApp de Bingii](https://wa.me/message/SQXBCLHS6SBXN1) avec le numéro de contact et l’UID Firebase préremplis; l’utilisateur doit appuyer sur Envoyer. Après vérification manuelle du paiement, l’administrateur passe `users/{uid}.estActif` à `true` dans Firestore.
 
 Premium donne accès aux reçus de vente (partage WhatsApp et impression), aux crédits clients et paiements partiels, aux bilans et rapports, ainsi qu’à plus de 30 articles. La sauvegarde et la synchronisation en ligne sont disponibles gratuitement après saisie d’un numéro, sans vérification SMS. Les opérations de paiement et d’abonnement doivent rester validées côté administration; le statut local de l’interface seul ne constitue pas une protection anti-fraude. Un compte en attente conserve l’accès à toutes les fonctions gratuites.
 
@@ -78,4 +78,4 @@ Les changements de fichiers TypeScript/React ne sont pas envoyés à Firestore :
 
 Le changement d’appareil d’un utilisateur gratuit se fait avec une sauvegarde JSON : téléchargez le fichier sur l’ancien téléphone, transférez-le, puis utilisez « Récupérer une sauvegarde » dans les paramètres du nouveau téléphone. Les mises à jour concurrentes du stock sur plusieurs appareils ne sont pas réconciliées automatiquement.
 
-Les dossiers `dataconnect/` et `src/dataconnect-generated/` sont des artefacts de l’ancienne configuration SQL/Data Connect; la version actuelle de Bĩngi utilise Firestore et ne les charge plus dans l’application.
+Les dossiers `dataconnect/` et `src/dataconnect-generated/` sont des artefacts de l’ancienne configuration SQL/Data Connect; la version actuelle de Bingii utilise Firestore et ne les charge plus dans l’application.

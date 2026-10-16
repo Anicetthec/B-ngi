@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   applicationName: "Bĩngi",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/icon.png",
-    shortcut: "/icon.png",
-    apple: "/icon.png",
+    icon: "/bingii-logo.svg",
+    shortcut: "/bingii-logo.svg",
+    apple: "/bingii-logo.svg",
   },
 };
 

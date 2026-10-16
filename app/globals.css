@@ -25,11 +25,11 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 .startup-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; gap: 12px; color: #7c8981; background: #fff; font-size: 12px; }.startup-screen p { margin: 0; }
 .auth-card { width: min(470px, calc(100% - 64px)); margin: auto; padding: 48px 0; }
 .brand-mark { width: 44px; height: 44px; display: inline-grid; place-items: center; border-radius: 14px; color: white; background: var(--green); font: 800 28px Manrope, sans-serif; }
-.brand-logo { display: block; flex: 0 0 auto; background: url("/logo-trim.jpeg") center / contain no-repeat; }
-.brand-logo-startup { width: 170px; height: 158px; }
-.brand-logo-auth { width: 220px; height: 204px; margin-bottom: 20px; }
+.brand-logo { display: block; flex: 0 0 auto; background: url("/bingii-logo.svg") center / contain no-repeat; }
+.brand-logo-startup { width: 170px; height: 128px; }
+.brand-logo-auth { width: 280px; height: 210px; margin-bottom: 20px; }
 .brand-logo-button { width: 100%; justify-content: center; padding: 0; }
-.brand-logo-sidebar { width: 150px; height: 140px; }
+.brand-logo-sidebar { width: 150px; height: 113px; }
 .eyebrow { color: #78877f; font-size: 10px; font-weight: 700; letter-spacing: .11em; }
 .auth-card > .eyebrow { display: block; margin: 44px 0 13px; }
 .auth-card h1 { margin: 0; font: 800 clamp(32px, 3.4vw, 44px)/1.17 Manrope, sans-serif; letter-spacing: -.045em; }
@@ -246,7 +246,7 @@ body { font-size: 16px; }
   .main-nav .nav-link { min-width: 58px; flex-basis: 58px; font-size: 8px; }
 }
 
-/* Nouvelle direction visuelle Bĩngi : boutique chaleureuse et outils de gestion nets. */
+/* Nouvelle direction visuelle Bingii : boutique chaleureuse et outils de gestion nets. */
 :root {
   --green: #174b38;
   --green-2: #236448;

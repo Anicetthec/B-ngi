@@ -107,8 +107,8 @@ function emailForPhone(phone: string) {
 
 function whatsappActivationUrl(uid: string, shopName: string, phone: string, premiumRequest = true) {
   const message = premiumRequest
-    ? `Bonjour, je souhaite activer mon abonnement mensuel Bĩngi. Mon identifiant de compte est : ${uid}. Boutique : ${shopName || "Ma boutique"}. Numéro de téléphone : ${phone}.`
-    : `Bonjour, je viens de créer mon compte Bĩngi. Mon identifiant de compte est : ${uid}. Boutique : ${shopName || "Ma boutique"}. Numéro de téléphone : ${phone}.`;
+    ? `Bonjour, je souhaite activer mon abonnement mensuel Bingii. Mon identifiant de compte est : ${uid}. Boutique : ${shopName || "Ma boutique"}. Numéro de téléphone : ${phone}.`
+    : `Bonjour, je viens de créer mon compte Bingii. Mon identifiant de compte est : ${uid}. Boutique : ${shopName || "Ma boutique"}. Numéro de téléphone : ${phone}.`;
   return `https://wa.me/message/SQXBCLHS6SBXN1?text=${encodeURIComponent(message)}`;
 }
 
@@ -1433,23 +1433,23 @@ export default function Home() {
   }, [modal, editingSale]);
 
   if (!authReady) {
-    return <div className="startup-screen"><span className="brand-logo brand-logo-startup" role="img" aria-label="Logo Bĩngi" /><p>Vérification du compte…</p></div>;
+    return <div className="startup-screen"><span className="brand-logo brand-logo-startup" role="img" aria-label="Logo Bingii" /><p>Vérification du compte…</p></div>;
   }
 
   if (!ownerUid) {
-    return <main className="startup-screen"><span className="brand-logo brand-logo-startup" role="img" aria-label="Logo Bĩngi" /><p>Ouverture de votre boutique…</p></main>;
+    return <main className="startup-screen"><span className="brand-logo brand-logo-startup" role="img" aria-label="Logo Bingii" /><p>Ouverture de votre boutique…</p></main>;
   }
 
   if (!authGatePassed) {
     return (
       <div className="auth-page">
         <section className="auth-card">
-          <span className="brand-logo brand-logo-auth" role="img" aria-label="Logo Bĩngi" />
-          <span className="eyebrow">BĨNGI · GESTION DE BOUTIQUE</span>
+          <span className="brand-logo brand-logo-auth" role="img" aria-label="Logo Bingii" />
+          <span className="eyebrow">BINGII · GESTION DE BOUTIQUE</span>
           <h1>{authMode === "register" ? "Créer votre compte" : "Retrouver votre compte"}</h1>
           <p className="auth-description">{authMode === "register" ? "Inscrivez-vous avec votre numéro et un code secret. Aucun SMS n’est envoyé. Votre compte pourra être retrouvé sur un autre téléphone." : "Connectez-vous avec le même numéro et le code secret choisis à l’inscription."}</p>
           <section className="auth-premium-card">
-            <div><span className="eyebrow">OPTION PREMIUM</span><strong>1 000 FCFA / mois</strong><p>Bilans détaillés, gestion des fournisseurs et jusqu’à 3 boutiques. Demande d’activation par WhatsApp après inscription.</p></div>
+            <div><span className="eyebrow">OPTION PREMIUM</span><strong>2 000 FCFA / mois</strong><p>Bilans détaillés, gestion des fournisseurs et jusqu’à 3 boutiques. Demande d’activation par WhatsApp après inscription.</p></div>
             <button className="button button-whatsapp" type="button" onClick={() => { setAuthMode("register"); setModal("premium"); setAuthMessage(""); }}>Créer un compte et demander Premium ↗</button>
           </section>
           <label>Numéro de téléphone
@@ -1473,7 +1473,7 @@ export default function Home() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <button className="brand brand-logo-button" onClick={() => setSection("dashboard")} aria-label="Bĩngi, accueil"><span className="brand-logo brand-logo-sidebar" role="img" aria-label="Bĩngi — Gestion de Boutique" /></button>
+        <button className="brand brand-logo-button" onClick={() => setSection("dashboard")} aria-label="Bingii, accueil"><span className="brand-logo brand-logo-sidebar" role="img" aria-label="Bingii — Gestion de Boutique" /></button>
         <div className="shop-switcher"><div className="shop-avatar">{(shopName || "M").slice(0, 1).toUpperCase()}</div><div className="shop-switcher-info">{user && shops.length > 1 ? <select aria-label="Choisir une boutique" value={ownerUid} onChange={(event) => void switchBoutique(event.target.value)}>{shops.map((item) => <option key={item.ownerUid} value={item.ownerUid}>{item.name}</option>)}</select> : <strong>{shopName || "Ma boutique"}</strong>}<small>{user ? `${shops.length} / 3 boutiques · sauvegardées` : "Mode gratuit · sans compte"}</small></div><span className="chevron">⌄</span></div>
         <span className="nav-caption">MENU PRINCIPAL</span>
         <nav className="main-nav">
@@ -1484,7 +1484,7 @@ export default function Home() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className={`plan-card ${premium ? "plan-active" : ""}`}><div className="plan-card-top"><span>{premium ? "✦ PREMIUM" : "OFFRE GRATUITE"}</span><span>{premium ? "●" : "↗"}</span></div><strong>{premium ? "Votre boutique est Premium" : "Les outils essentiels sont gratuits"}</strong><p>{premium ? "Merci de soutenir Bĩngi." : "Stock, ventes et sauvegarde en ligne gratuite."}</p>{!premium && <button onClick={() => setSection("settings")}>Voir Premium <span>→</span></button>}</div>
+          <div className={`plan-card ${premium ? "plan-active" : ""}`}><div className="plan-card-top"><span>{premium ? "✦ PREMIUM" : "OFFRE GRATUITE"}</span><span>{premium ? "●" : "↗"}</span></div><strong>{premium ? "Votre boutique est Premium" : "Les outils essentiels sont gratuits"}</strong><p>{premium ? "Merci de soutenir Bingii." : "Stock, ventes et sauvegarde en ligne gratuite."}</p>{!premium && <button onClick={() => setSection("settings")}>Voir Premium <span>→</span></button>}</div>
           <div className="profile-row"><div className="profile-avatar">{(shop?.phone ?? user?.phoneNumber)?.slice(-2) ?? "Z"}</div><div className="profile-info"><strong>{user ? shop?.phone ?? user.phoneNumber ?? "Compte connecté" : "Sans compte"}</strong><small>{user ? (premium ? "Compte Premium" : "Compte en ligne gratuit") : "Données sur cet appareil"}</small></div>{user && !user.isAnonymous && <button className="more-button" aria-label="Déconnexion" title="Déconnecter le compte en ligne" onClick={async () => { if (auth) await signOut(auth); }}>⋯</button>}</div>
         </div>
       </aside>
@@ -1493,7 +1493,7 @@ export default function Home() {
         <aside className="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu principal" onClick={(event) => event.stopPropagation()}>
           <div className="mobile-drawer-heading"><div><strong>Menu principal</strong><span>{shopName || "Ma boutique"}</span></div><button className="mobile-drawer-close" onClick={() => setMobileMenuOpen(false)} aria-label="Fermer le menu">×</button></div>
           <nav aria-label="Rubriques de l’application">{navItems.map((item) => <button key={item.id} className={`mobile-drawer-link ${section === item.id ? "active" : ""}`} onClick={() => { setSection(item.id); setMobileMenuOpen(false); }}><span className="nav-icon">{item.icon}</span><span>{item.label}</span>{item.id === "debts" && overdueDebts.length > 0 && <span className="overdue-count">{overdueDebts.length}</span>}{item.premium && !premium && <span className="pro-tag">PRO</span>}</button>)}</nav>
-          <section className="mobile-premium-card"><strong>{premium ? "Premium est activé" : "Découvrez Premium"}</strong><span>{premium ? "Profitez de vos outils avancés." : "1 000 FCFA par mois · Activation via WhatsApp"}</span>{!premium && <button onClick={() => { setMobileMenuOpen(false); openPremiumRequest(); }}>Voir l’offre Premium ↗</button>}</section>
+          <section className="mobile-premium-card"><strong>{premium ? "Premium est activé" : "Découvrez Premium"}</strong><span>{premium ? "Profitez de vos outils avancés." : "2 000 FCFA par mois · Activation via WhatsApp"}</span>{!premium && <button onClick={() => { setMobileMenuOpen(false); openPremiumRequest(); }}>Voir l’offre Premium ↗</button>}</section>
         </aside>
       </div>}
 
@@ -1510,7 +1510,7 @@ export default function Home() {
             <button className="button button-primary" onClick={() => { setEditingProduct(null); setModal("product"); }}>Ajouter mon premier article</button>
           </section>}
           {section === "dashboard" && !premium && <section className="backup-reminder premium-dashboard-offer">
-            <div><strong>Accéder à Premium · 1 000 FCFA / mois</strong><span>Débloquez les bilans détaillés, la gestion avancée et jusqu’à 3 boutiques. Après paiement, l’activation se fait manuellement par WhatsApp.</span></div>
+            <div><strong>Accéder à Premium · 2 000 FCFA / mois</strong><span>Débloquez les bilans détaillés, la gestion avancée et jusqu’à 3 boutiques. Après paiement, l’activation se fait manuellement par WhatsApp.</span></div>
             {accountActivationUrl
               ? <a className="button button-whatsapp" href={accountActivationUrl} target="_blank" rel="noreferrer">Demander sur WhatsApp ↗</a>
               : <button className="button button-whatsapp" onClick={openPremiumRequest}>Accéder à Premium ↗</button>}
@@ -1575,7 +1575,7 @@ export default function Home() {
                 <button className="button button-outline" onClick={() => void exportBackup()}>↓ Télécharger ma sauvegarde</button>
                 <label className="button button-outline import-button">↑ Récupérer une sauvegarde<input type="file" accept="application/json,.json" onChange={(event) => void importBackup(event)} /></label>
               </div>
-              <div className="backup-guide"><strong>Pour changer de téléphone</strong><span>1. Téléchargez la sauvegarde sur cet appareil.</span><span>2. Envoyez le fichier sur le nouveau téléphone.</span><span>3. Dans Bĩngi, ouvrez Paramètres puis « Récupérer une sauvegarde ».</span></div>
+              <div className="backup-guide"><strong>Pour changer de téléphone</strong><span>1. Téléchargez la sauvegarde sur cet appareil.</span><span>2. Envoyez le fichier sur le nouveau téléphone.</span><span>3. Dans Bingii, ouvrez Paramètres puis « Récupérer une sauvegarde ».</span></div>
               <div className="settings-divider" />
               <h2>Sauvegarde en ligne</h2>
               <p>{user ? `Votre compte ${user.isAnonymous ? "anonyme" : "connecté"} synchronise vos données. Le numéro ${shop?.phone ?? user.phoneNumber ?? "de contact"} n’est pas un moyen de connexion et ne permet pas de retrouver le compte sur un autre téléphone.` : "Activez la sauvegarde en ligne pour retrouver vos données sur cet appareil."}</p>
@@ -1589,12 +1589,12 @@ export default function Home() {
               <p>{user ? `Compte connecté : ${shop?.phone ?? "numéro enregistré"} · Identifiant ${user.uid}. État : ${syncing ? "synchronisation en cours" : syncMessage}.` : "Aucun compte en ligne n’est connecté. Les données sont conservées sur cet appareil."}</p>
               {user && <button className="button button-outline" onClick={async () => { if (auth) await signOut(auth); }}>Se déconnecter</button>}
               <div className="settings-divider" />
-              <h2>Installer Bĩngi</h2>
+              <h2>Installer Bingii</h2>
               <p>Ajoutez l’application à l’écran d’accueil pour la retrouver facilement sur ce téléphone.</p>
               <button className="button button-outline" onClick={() => void installApp()}>↓ Installer l’application</button>
             </section>
             <section className={`premium-card ${premium ? "premium-card-on" : ""}`}>
-              <span className="premium-spark">✦</span><span className="eyebrow">{premium ? "VOTRE ABONNEMENT" : "BĨNGI PREMIUM"}</span>
+              <span className="premium-spark">✦</span><span className="eyebrow">{premium ? "VOTRE ABONNEMENT" : "BINGII PREMIUM"}</span>
               {user && shop?.estActif !== true && <div className="payment-help"><strong>Votre abonnement attend son activation</strong><span>Après vérification de votre paiement, l’administrateur activera votre compte. Votre identifiant : <code>{user.uid}</code>.</span>{accountActivationUrl && <a className="button button-whatsapp request-whatsapp" href={accountActivationUrl} target="_blank" rel="noreferrer">Activer mon abonnement via WhatsApp ↗</a>}<button className="button button-outline" onClick={() => void synchronize()} disabled={syncing}>{syncing ? "Vérification…" : "Vérifier si mon abonnement est activé"}</button></div>}
               <h2>{premium ? "Votre boutique est Premium" : "Des outils avancés pour votre boutique."}</h2>
               <p>{premium ? `Votre accès est actif${shop?.subscriptionExpiresAt ? ` jusqu’au ${dayLabel(shop.subscriptionExpiresAt)}` : ""}. Vous pouvez gérer jusqu’à 3 boutiques avec des stocks et bilans séparés.` : "La gestion quotidienne et la sauvegarde en ligne restent gratuites. Premium ajoute des outils avancés et jusqu’à 3 boutiques."}</p>
@@ -1606,7 +1606,7 @@ export default function Home() {
         </div>
       </main>
 
-      {modal && <div className="modal-backdrop" onClick={() => setModal(null)}><div className={`modal ${modal === "receipt" ? "receipt-modal" : ""}`} onClick={(event) => event.stopPropagation()}><div className="modal-heading"><div><span className="eyebrow">BĨNGI · {shopName || "MA BOUTIQUE"}</span><h2>{modal === "product" ? "Ajouter un article" : modal === "sale" ? "Enregistrer une vente" : modal === "expense" ? (editingExpense ? "Modifier une dépense" : "Ajouter une dépense") : modal === "debt" ? (editingDebt ? "Modifier un crédit client" : "Ajouter un crédit client") : modal === "supplier" ? (editingSupplier ? "Modifier le fournisseur" : "Ajouter un fournisseur") : modal === "restock" ? "Réapprovisionner le stock" : modal === "loss" ? "Déclarer une perte de stock" : modal === "debt-payment" ? "Paiement du crédit" : modal === "receipt" ? "Reçu de vente" : modal === "cloud-sync" ? "Sauvegarde en ligne gratuite" : "Passer à Premium"}</h2></div><button className="close-button no-print" onClick={() => setModal(null)} aria-label="Fermer">×</button></div>
+      {modal && <div className="modal-backdrop" onClick={() => setModal(null)}><div className={`modal ${modal === "receipt" ? "receipt-modal" : ""}`} onClick={(event) => event.stopPropagation()}><div className="modal-heading"><div><span className="eyebrow">BINGII · {shopName || "MA BOUTIQUE"}</span><h2>{modal === "product" ? "Ajouter un article" : modal === "sale" ? "Enregistrer une vente" : modal === "expense" ? (editingExpense ? "Modifier une dépense" : "Ajouter une dépense") : modal === "debt" ? (editingDebt ? "Modifier un crédit client" : "Ajouter un crédit client") : modal === "supplier" ? (editingSupplier ? "Modifier le fournisseur" : "Ajouter un fournisseur") : modal === "restock" ? "Réapprovisionner le stock" : modal === "loss" ? "Déclarer une perte de stock" : modal === "debt-payment" ? "Paiement du crédit" : modal === "receipt" ? "Reçu de vente" : modal === "cloud-sync" ? "Sauvegarde en ligne gratuite" : "Passer à Premium"}</h2></div><button className="close-button no-print" onClick={() => setModal(null)} aria-label="Fermer">×</button></div>
         {modal === "product" && <form className="modal-form" onSubmit={(event) => void addProduct(event)}><p className="form-help">Quelques informations suffisent. Vous pourrez ajouter le reste plus tard.</p><label>Nom de l’article<input required autoFocus value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} placeholder="Ex. Riz local, savon, huile…" /></label><label>Prix de vente (FCFA)<input required type="number" min="0" step="1" value={draft.sellingPrice} onChange={(event) => setDraft({ ...draft, sellingPrice: event.target.value })} placeholder="Ex. 1 000" /></label><label>Quantité en boutique<input required type="number" min="0" step="1" value={draft.stock} onChange={(event) => setDraft({ ...draft, stock: event.target.value })} placeholder="Ex. 10" /></label><details className="optional-fields"><summary>Ajouter des détails (facultatif)</summary><div className="optional-field-content"><label>Catégorie<input value={draft.category} onChange={(event) => setDraft({ ...draft, category: event.target.value })} placeholder="Ex. Alimentation" /></label><label>Prix d’achat (FCFA)<input type="number" min="0" step="1" value={draft.costPrice} onChange={(event) => setDraft({ ...draft, costPrice: event.target.value })} placeholder="Pour calculer les bénéfices" /></label><label>M’avertir quand il en reste<input type="number" min="0" step="1" value={draft.lowStockThreshold} onChange={(event) => setDraft({ ...draft, lowStockThreshold: event.target.value })} /></label></div></details><ModalActions onCancel={() => setModal(null)} submit="Enregistrer l’article" /></form>}
         {modal === "sale" && <form className="modal-form" onSubmit={(event) => void recordSale(event)}><label>Produit<select required value={saleProductId} onChange={(event) => setSaleProductId(event.target.value)}><option value="">Choisir un produit</option>{products.filter((product) => product.stock > 0).map((product) => <option key={product.id} value={product.id}>{product.name} · {product.stock} disponible(s) · {money(product.sellingPrice, currency)}</option>)}</select></label><label>Quantité<input required type="number" min="1" step="1" max={products.find((product) => product.id === saleProductId)?.stock ?? undefined} value={saleQuantity} onChange={(event) => setSaleQuantity(event.target.value)} /></label><label>Mode de paiement<select value={salePaymentMethod} onChange={(event) => setSalePaymentMethod(event.target.value as PaymentMethod)} disabled={Boolean(editingSale)}><option value="cash">Espèces</option><option value="orange_money">Orange Money</option><option value="moov_money">Moov Money</option><option value="credit">Crédit client</option></select></label>{salePaymentMethod === "credit" && !editingSale && <><label>Nom du client<input required value={saleCustomerName} onChange={(event) => setSaleCustomerName(event.target.value)} /></label><label>Téléphone du client (facultatif)<input inputMode="tel" value={saleCustomerPhone} onChange={(event) => setSaleCustomerPhone(event.target.value)} /></label><label>Échéance du crédit<input type="date" value={debtDueDate} onChange={(event) => setDebtDueDate(event.target.value)} /></label></>}{saleProductId && <div className="sale-total">Total estimé <strong>{money((products.find((product) => product.id === saleProductId)?.sellingPrice ?? 0) * Number(saleQuantity), currency)}</strong>{salePaymentMethod === "credit" && <small>Le montant sera ajouté aux crédits clients.</small>}</div>}<ModalActions onCancel={() => setModal(null)} submit="Confirmer la vente" /></form>}
         {modal === "expense" && <form className="modal-form" onSubmit={(event) => void addExpense(event)}><label>Libellé<input required autoFocus value={expenseLabel} onChange={(event) => setExpenseLabel(event.target.value)} placeholder="Ex. Transport, électricité…" /></label><label>Montant ({currency})<input required type="number" min="1" step="1" value={expenseAmount} onChange={(event) => setExpenseAmount(event.target.value)} /></label><label>Payé par<select value={expenseMethod} onChange={(event) => setExpenseMethod(event.target.value as Exclude<PaymentMethod, "credit">)}><option value="cash">Espèces</option><option value="orange_money">Orange Money</option><option value="moov_money">Moov Money</option></select></label><ModalActions onCancel={() => setModal(null)} submit={editingExpense ? "Enregistrer les changements" : "Enregistrer la dépense"} /></form>}
@@ -1642,7 +1642,7 @@ export default function Home() {
         </div>}
         {modal === "receipt" && !premium && <PremiumGate feature="L’impression et le partage WhatsApp des reçus sont inclus dans Premium." onUpgrade={openPremiumRequest} accountInactive={Boolean(user && shop?.estActif !== true)} userId={user?.uid} whatsappUrl={accountActivationUrl} onRefresh={() => void synchronize()} refreshing={syncing} />}
         {modal === "premium" && <div className="premium-request">
-          <div className="request-price"><strong>1 000 FCFA</strong><span>pour un mois · aucun prélèvement automatique</span></div>
+          <div className="request-price"><strong>2 000 FCFA</strong><span>pour un mois · aucun prélèvement automatique</span></div>
           {user && !user.isAnonymous
             ? <>
                 {shop?.estActif === true
@@ -1770,5 +1770,5 @@ function PremiumGate({ feature, onUpgrade, accountInactive, userId, whatsappUrl,
   onRefresh: () => void;
   refreshing: boolean;
 }) {
-  return <section className="locked-panel"><span className="lock-icon">✦</span><span className="eyebrow">{accountInactive ? "ACTIVATION EN ATTENTE" : "FONCTIONNALITÉ PREMIUM"}</span><h2>{accountInactive ? "Votre abonnement n’est pas encore activé." : "Débloquez ces outils pour votre boutique."}</h2><p>{feature}</p><p>{accountInactive ? "Après vérification de votre paiement, l’administrateur activera votre abonnement. L’offre gratuite reste disponible pendant l’attente." : "Premium coûte 1 000 FCFA pour un mois. Vous pouvez continuer à enregistrer vos ventes gratuitement."}</p>{accountInactive && userId && <p>Identifiant du compte : <code>{userId}</code></p>}{accountInactive && whatsappUrl ? <a className="button button-whatsapp" href={whatsappUrl} target="_blank" rel="noreferrer">Activer mon abonnement via WhatsApp ↗</a> : !accountInactive && <button className="button button-primary" onClick={onUpgrade}>Découvrir Premium →</button>}{accountInactive && <button className="button button-outline" onClick={onRefresh} disabled={refreshing}>{refreshing ? "Vérification…" : "Vérifier mon activation"}</button>}</section>;
+  return <section className="locked-panel"><span className="lock-icon">✦</span><span className="eyebrow">{accountInactive ? "ACTIVATION EN ATTENTE" : "FONCTIONNALITÉ PREMIUM"}</span><h2>{accountInactive ? "Votre abonnement n’est pas encore activé." : "Débloquez ces outils pour votre boutique."}</h2><p>{feature}</p><p>{accountInactive ? "Après vérification de votre paiement, l’administrateur activera votre abonnement. L’offre gratuite reste disponible pendant l’attente." : "Premium coûte 2 000 FCFA pour un mois. Vous pouvez continuer à enregistrer vos ventes gratuitement."}</p>{accountInactive && userId && <p>Identifiant du compte : <code>{userId}</code></p>}{accountInactive && whatsappUrl ? <a className="button button-whatsapp" href={whatsappUrl} target="_blank" rel="noreferrer">Activer mon abonnement via WhatsApp ↗</a> : !accountInactive && <button className="button button-primary" onClick={onUpgrade}>Découvrir Premium →</button>}{accountInactive && <button className="button button-outline" onClick={onRefresh} disabled={refreshing}>{refreshing ? "Vérification…" : "Vérifier mon activation"}</button>}</section>;
 }
