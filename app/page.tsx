@@ -734,8 +734,7 @@ export default function Home() {
     setEditingProduct(null);
     setDraft({ name: "", category: "", costPrice: "", sellingPrice: "", stock: "", lowStockThreshold: "5" });
     await refreshLocal();
-    notify("success", editingProduct ? "Produit modifié." : "Produit ajouté.");
-    void synchronize();
+    await confirmDataSync("Produit sauvegardé en ligne.", "Produit enregistré sur ce téléphone; la sauvegarde en ligne attend Internet ou la connexion au compte.");
   }
 
   async function addSupplier(event: React.FormEvent<HTMLFormElement>) {
@@ -745,7 +744,7 @@ export default function Home() {
     if (editingSupplier) await db.suppliers.put(supplier); else await db.suppliers.add(supplier);
     setEditingSupplier(null);
     setSupplierName(""); setSupplierPhone(""); setSupplierNote(""); setModal(null);
-    await refreshLocal(); notify("success", "Fournisseur enregistré."); void synchronize();
+    await refreshLocal(); await confirmDataSync("Fournisseur sauvegardé en ligne.", "Fournisseur enregistré sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   function openSupplierEditor(supplier: Supplier) {
@@ -756,7 +755,7 @@ export default function Home() {
   async function deleteSupplier(supplier: Supplier) {
     if (!window.confirm(`Supprimer le fournisseur « ${supplier.name} » ?`)) return;
     await db.suppliers.put({ ...supplier, isDeleted: true, synced: false });
-    await refreshLocal(); notify("success", "Fournisseur supprimé."); void synchronize();
+    await refreshLocal(); await confirmDataSync("Suppression du fournisseur sauvegardée en ligne.", "Suppression enregistrée sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   function openRestock(product: Product) {
@@ -781,7 +780,7 @@ export default function Home() {
       await db.products.put({ ...product, stock: nextStock, costPrice: weightedCost, supplierId: supplier?.id, supplierName: supplier?.name, updatedAt: new Date().toISOString(), synced: false });
       await db.purchases.add(purchase);
     });
-    setModal(null); setStockProduct(null); await refreshLocal(); notify("success", `Achat enregistré : ${quantity} unité(s) de ${product.name}.`); void synchronize();
+    setModal(null); setStockProduct(null); await refreshLocal(); await confirmDataSync(`Achat de ${quantity} unité(s) de ${product.name} sauvegardé en ligne.`, "Achat enregistré sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   async function addSupplierPayment(event: React.FormEvent<HTMLFormElement>) {
@@ -793,7 +792,7 @@ export default function Home() {
     const payment: SupplierPayment = { id: newId(), ownerUid, purchaseId: purchase.id, amount, paymentMethod: supplierPaymentMethod, createdAt: new Date().toISOString(), synced: false };
     await db.supplierPayments.add(payment);
     setSelectedPurchase(null); setSupplierPaymentAmount(""); setModal(null);
-    await refreshLocal(); notify("success", "Règlement fournisseur enregistré."); void synchronize();
+    await refreshLocal(); await confirmDataSync("Règlement fournisseur sauvegardé en ligne.", "Règlement enregistré sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   function openLoss(product: Product) { if (!premium) return openPremiumRequest(); setStockProduct(product); setLossQuantity("1"); setLossReason(""); setModal("loss"); }
@@ -808,7 +807,7 @@ export default function Home() {
       await db.products.put({ ...product, stock: product.stock - quantity, updatedAt: new Date().toISOString(), synced: false });
       await db.stockLosses.add(loss);
     });
-    setModal(null); setStockProduct(null); await refreshLocal(); notify("success", "Perte de stock enregistrée et quantité ajustée."); void synchronize();
+    setModal(null); setStockProduct(null); await refreshLocal(); await confirmDataSync("Perte de stock sauvegardée en ligne.", "Perte enregistrée sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   function openProductEditor(product: Product) {
@@ -828,8 +827,7 @@ export default function Home() {
     if (!window.confirm(`Supprimer le produit « ${product.name} » ? Les ventes déjà enregistrées seront conservées.`)) return;
     await db.products.update(product.id, { isDeleted: true, updatedAt: new Date().toISOString(), synced: false });
     await refreshLocal();
-    notify("success", "Produit supprimé. Les ventes existantes sont conservées.");
-    void synchronize();
+    await confirmDataSync("Suppression du produit sauvegardée en ligne. Les ventes existantes sont conservées.", "Suppression enregistrée sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   async function recordSale(event: React.FormEvent<HTMLFormElement>) {
@@ -960,8 +958,7 @@ export default function Home() {
     setSaleProductId("");
     setSaleQuantity("1");
     await refreshLocal();
-    notify("success", "Vente modifiée et stock mis à jour.");
-    void synchronize();
+    await confirmDataSync("Vente modifiée et sauvegardée en ligne.", "Vente modifiée sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   function openSaleEditor(sale: Sale) {
@@ -1003,8 +1000,7 @@ export default function Home() {
       return notify("error", "La vente n’a pas pu être supprimée.");
     }
     await refreshLocal();
-    notify("success", "Vente supprimée et stock remis à jour.");
-    void synchronize();
+    await confirmDataSync("Suppression de la vente sauvegardée en ligne; stock remis à jour.", "Suppression enregistrée sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   function openReceipt(sale: Sale) {
@@ -1072,8 +1068,7 @@ export default function Home() {
     setDebtNote("");
     setDebtDueDate(() => { const date = new Date(); date.setDate(date.getDate() + 30); return dateInputValue(date); });
     await refreshLocal();
-    notify("success", editingDebt ? "Crédit client modifié." : "Crédit client enregistré.");
-    void synchronize();
+    await confirmDataSync(editingDebt ? "Crédit client modifié et sauvegardé en ligne." : "Crédit client sauvegardé en ligne.", "Crédit enregistré sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   function openDebtEditor(debt: CustomerDebt) {
@@ -1105,8 +1100,7 @@ export default function Home() {
     setSelectedDebt(null);
     setModal(null);
     await refreshLocal();
-    notify("success", "Crédit et paiements supprimés.");
-    void synchronize();
+    await confirmDataSync("Suppression du crédit et de ses paiements sauvegardée en ligne.", "Suppression enregistrée sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   async function addDebtPayment(event: React.FormEvent<HTMLFormElement>) {
@@ -1144,8 +1138,7 @@ export default function Home() {
       setModal("debt-payment");
       setDebtPaymentAmount("");
       await refreshLocal();
-      notify("success", "Paiement modifié.");
-      void synchronize();
+      await confirmDataSync("Paiement modifié et sauvegardé en ligne.", "Paiement modifié sur ce téléphone; sauvegarde en ligne en attente.");
     }
 
     async function deleteDebtPayment(payment: DebtPayment) {
@@ -1163,8 +1156,7 @@ export default function Home() {
         return notify("error", "Le paiement n’a pas pu être supprimé.");
       }
       await refreshLocal();
-      notify("success", "Paiement supprimé.");
-      void synchronize();
+      await confirmDataSync("Suppression du paiement sauvegardée en ligne.", "Suppression enregistrée sur ce téléphone; sauvegarde en ligne en attente.");
     }
     const remaining = remainingForDebt(debt);
     if (amount > remaining) return notify("error", `Le montant dépasse le reste dû (${money(remaining, currency)}).`);
@@ -1184,8 +1176,7 @@ export default function Home() {
     });
     setDebtPaymentAmount("");
     await refreshLocal();
-    notify("success", amount === remaining ? "Crédit entièrement remboursé." : "Paiement partiel enregistré.");
-    void synchronize();
+    await confirmDataSync(amount === remaining ? "Crédit entièrement remboursé et sauvegardé en ligne." : "Paiement partiel sauvegardé en ligne.", "Paiement enregistré sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   async function addCashMovement(event: React.FormEvent<HTMLFormElement>) {
@@ -1195,7 +1186,7 @@ export default function Home() {
     const movement: CashMovement = { id: newId(), ownerUid, kind: cashMovementKind, amount, paymentMethod: cashMovementMethod, note: cashMovementNote.trim(), createdAt: new Date().toISOString(), synced: false };
     await db.cashMovements.add(movement);
     setCashMovementAmount(""); setCashMovementNote("");
-    await refreshLocal(); notify("success", cashMovementKind === "withdrawal" ? "Retrait enregistré dans la caisse." : "Apport enregistré dans la caisse."); void synchronize();
+    await refreshLocal(); await confirmDataSync("Mouvement de caisse sauvegardé en ligne.", "Mouvement de caisse enregistré sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   async function saveCashClosing(event: React.FormEvent<HTMLFormElement>) {
@@ -1205,7 +1196,7 @@ export default function Home() {
     if (!Number.isInteger(openingCash) || openingCash < 0 || !Number.isInteger(countedCash) || countedCash < 0) return notify("error", "Saisissez des montants de caisse valides.");
     const closing: CashClosing = { id: `${ownerUid.replaceAll(":", "_")}_${cashDate}`, ownerUid, date: cashDate, openingCash, countedCash, expectedCash, note: cashCloseNote.trim(), closedAt: new Date().toISOString(), synced: false };
     await db.cashClosings.put(closing);
-    await refreshLocal(); notify("success", "Clôture de caisse enregistrée."); void synchronize();
+    await refreshLocal(); await confirmDataSync("Clôture de caisse sauvegardée en ligne.", "Clôture enregistrée sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   async function exportBackup() {
