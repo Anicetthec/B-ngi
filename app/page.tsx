@@ -18,6 +18,7 @@ import type { CashClosing, CashMovement, CustomerDebt, DebtPayment, Expense, Pay
 import { loadCloudData, loadCloudShops, saveShopProfile, syncPending } from "@/lib/sync";
 
 type Toast = { kind: "success" | "error"; text: string } | null;
+type SyncResult = "synced" | "pending" | "error";
 type CatalogDraft = {
   name: string;
   category: string;
@@ -304,8 +305,8 @@ export default function Home() {
     setCashClosings(visibleCashClosings);
   }, [ownerUid]);
 
-  const synchronize = useCallback(async (uid = ownerUid) => {
-    if (!uid || !user || !navigator.onLine || migratingRef.current || !authGatePassedRef.current) return;
+  const synchronize = useCallback(async (uid = ownerUid, quiet = false): Promise<SyncResult> => {
+    if (!uid || !user || !navigator.onLine || migratingRef.current || !authGatePassedRef.current) return "pending";
     setSyncing(true);
     try {
       const profilePendingKey = `zambo-shop-pending:${uid}`;
@@ -339,15 +340,24 @@ export default function Home() {
       }
       await refreshLocal(uid);
       setSyncMessage("Synchronisé");
-      if (Object.values(counts).some((count) => count > 0)) notify("success", "Vos données hors ligne sont synchronisées.");
+      if (!quiet && Object.values(counts).some((count) => count > 0)) notify("success", "Vos données hors ligne sont synchronisées.");
+      return "synced";
     } catch (error) {
       console.error("Firestore sync failed", error);
       setSyncMessage("Synchronisation en attente");
-      notify("error", "La synchronisation a échoué. Les données restent enregistrées sur cet appareil.");
+      if (!quiet) notify("error", "La synchronisation a échoué. Les données restent enregistrées sur cet appareil.");
+      return "error";
     } finally {
       setSyncing(false);
     }
   }, [notify, ownerUid, refreshLocal, user]);
+
+  async function confirmDataSync(syncedMessage: string, pendingMessage: string, uid = ownerUid) {
+    const result = await synchronize(uid, true);
+    if (result === "synced") notify("success", syncedMessage);
+    else if (result === "pending") notify("success", pendingMessage);
+    else notify("error", `${pendingMessage} La synchronisation a échoué; réessayez avant de supprimer l’application.`);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -888,13 +898,10 @@ export default function Home() {
     setSelectedReceipt(sale);
     if (premium) setModal("receipt");
     await refreshLocal();
-    notify(
-      "success",
-      premium
-        ? `Vente enregistrée : ${money(sale.total, currency)}. Votre reçu est prêt.`
-        : `Vente enregistrée : ${money(sale.total, currency)}. Les reçus sont disponibles avec Premium.`,
+    await confirmDataSync(
+      premium ? `Vente de ${money(sale.total, currency)} sauvegardée en ligne. Votre reçu est prêt.` : `Vente de ${money(sale.total, currency)} sauvegardée en ligne.`,
+      "Vente enregistrée sur ce téléphone; la sauvegarde en ligne attend Internet ou la connexion au compte.",
     );
-    void synchronize();
   }
 
   async function updateSale(sale: Sale, product: Product, quantity: number) {
@@ -1022,8 +1029,10 @@ export default function Home() {
     setExpenseLabel("");
     setExpenseAmount("");
     await refreshLocal();
-    notify("success", editingExpense ? "Dépense modifiée." : "Dépense enregistrée.");
-    void synchronize();
+    await confirmDataSync(
+      editingExpense ? "Dépense modifiée et sauvegardée en ligne." : "Dépense sauvegardée en ligne.",
+      "Dépense enregistrée sur ce téléphone; la sauvegarde en ligne attend Internet ou la connexion au compte.",
+    );
   }
 
   function openExpenseEditor(expense: Expense) { setEditingExpense(expense); setExpenseLabel(expense.label); setExpenseAmount(String(expense.amount)); setExpenseMethod(expense.paymentMethod ?? "cash"); setModal("expense"); }
@@ -1031,7 +1040,7 @@ export default function Home() {
   async function deleteExpense(expense: Expense) {
     if (!window.confirm(`Supprimer la dépense « ${expense.label} » ?`)) return;
     await db.expenses.put({ ...expense, isDeleted: true, synced: false });
-    await refreshLocal(); notify("success", "Dépense supprimée."); void synchronize();
+    await refreshLocal(); await confirmDataSync("Suppression de la dépense sauvegardée en ligne.", "Suppression enregistrée sur ce téléphone; sauvegarde en ligne en attente.");
   }
 
   async function addDebt(event: React.FormEvent<HTMLFormElement>) {
@@ -1307,8 +1316,7 @@ export default function Home() {
         localStorage.setItem(`zambo-currency:${ownerUid}`, content.shop.currency);
       }
       await refreshLocal();
-      notify("success", "Sauvegarde récupérée. Vos articles, ventes et paiements sont restaurés.");
-      void synchronize();
+      await confirmDataSync("Sauvegarde récupérée et synchronisée en ligne.", "Sauvegarde récupérée sur ce téléphone; synchronisation en ligne en attente.");
     } catch (error) {
       console.error("Backup import failed", error);
       notify("error", "Fichier invalide ou sauvegarde incompatible.");

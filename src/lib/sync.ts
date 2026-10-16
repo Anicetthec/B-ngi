@@ -31,6 +31,18 @@ function requireFirestore() {
   return firestore;
 }
 
+function removeUndefined<T>(value: T): T {
+  if (Array.isArray(value)) return value.filter((item) => item !== undefined).map(removeUndefined) as T;
+  if (value && typeof value === "object" && !(value instanceof Date) && !(value instanceof Timestamp)) {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .filter(([, item]) => item !== undefined)
+        .map(([key, item]) => [key, removeUndefined(item)]),
+    ) as T;
+  }
+  return value;
+}
+
 function accountUid(ownerUid: string) { return ownerUid.split("::", 1)[0]; }
 function shopIdFromOwner(ownerUid: string) { return ownerUid.split("::")[1]; }
 function shopProfileRef(ownerUid: string) {
@@ -194,47 +206,47 @@ export async function syncPending(ownerUid: string, includePremiumData: boolean)
   };
 
   for (const product of products) {
-    await setDoc(dataDoc(ownerUid, "products", product.id), product);
+    await setDoc(dataDoc(ownerUid, "products", product.id), removeUndefined(product));
     await db.products.update(product.id, { synced: true });
   }
   for (const sale of sales) {
-    await setDoc(dataDoc(ownerUid, "sales", sale.id), sale);
+    await setDoc(dataDoc(ownerUid, "sales", sale.id), removeUndefined(sale));
     await db.sales.update(sale.id, { synced: true });
   }
   for (const expense of expenses) {
-    await setDoc(dataDoc(ownerUid, "expenses", expense.id), expense);
+    await setDoc(dataDoc(ownerUid, "expenses", expense.id), removeUndefined(expense));
     await db.expenses.update(expense.id, { synced: true });
   }
   for (const debt of debts) {
-    await setDoc(dataDoc(ownerUid, "debts", debt.id), debt);
+    await setDoc(dataDoc(ownerUid, "debts", debt.id), removeUndefined(debt));
     await db.debts.update(debt.id, { synced: true });
   }
   for (const payment of debtPayments) {
-    await setDoc(dataDoc(ownerUid, "debtPayments", payment.id), payment);
+    await setDoc(dataDoc(ownerUid, "debtPayments", payment.id), removeUndefined(payment));
     await db.debtPayments.update(payment.id, { synced: true });
   }
   for (const supplier of suppliers) {
-    await setDoc(dataDoc(ownerUid, "suppliers", supplier.id), supplier);
+    await setDoc(dataDoc(ownerUid, "suppliers", supplier.id), removeUndefined(supplier));
     await db.suppliers.update(supplier.id, { synced: true });
   }
   for (const loss of stockLosses) {
-    await setDoc(dataDoc(ownerUid, "stockLosses", loss.id), loss);
+    await setDoc(dataDoc(ownerUid, "stockLosses", loss.id), removeUndefined(loss));
     await db.stockLosses.update(loss.id, { synced: true });
   }
   for (const purchase of purchases) {
-    await setDoc(dataDoc(ownerUid, "purchases", purchase.id), purchase);
+    await setDoc(dataDoc(ownerUid, "purchases", purchase.id), removeUndefined(purchase));
     await db.purchases.update(purchase.id, { synced: true });
   }
   for (const payment of supplierPayments) {
-    await setDoc(dataDoc(ownerUid, "supplierPayments", payment.id), payment);
+    await setDoc(dataDoc(ownerUid, "supplierPayments", payment.id), removeUndefined(payment));
     await db.supplierPayments.update(payment.id, { synced: true });
   }
   for (const movement of cashMovements) {
-    await setDoc(dataDoc(ownerUid, "cashMovements", movement.id), movement);
+    await setDoc(dataDoc(ownerUid, "cashMovements", movement.id), removeUndefined(movement));
     await db.cashMovements.update(movement.id, { synced: true });
   }
   for (const closing of cashClosings) {
-    await setDoc(dataDoc(ownerUid, "cashClosings", closing.id), closing);
+    await setDoc(dataDoc(ownerUid, "cashClosings", closing.id), removeUndefined(closing));
     await db.cashClosings.update(closing.id, { synced: true });
   }
   return counts;
