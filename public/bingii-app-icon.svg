@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#f6faf8"/>
+  <svg x="0" y="100" width="800" height="600" viewBox="0 0 800 600">
+    <defs>
+      <linearGradient id="em" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#14b88a"/>
+        <stop offset="1" stop-color="#0a7a63"/>
+      </linearGradient>
+    </defs>
+    <circle cx="230" cy="300" r="120" fill="url(#em)"/>
+    <path d="M190 240 H235 a28 28 0 0 1 0 56 H190 Z" fill="#fff"/>
+    <path d="M190 296 H242 a32 32 0 0 1 0 64 H190 Z" fill="#fff"/>
+    <rect x="206" y="254" width="26" height="14" rx="7" fill="#0f9a79"/>
+    <rect x="206" y="313" width="32" height="18" rx="9" fill="#0d8c70"/>
+    <circle cx="316" cy="214" r="22" fill="#ffb020" stroke="#f6faf8" stroke-width="8"/>
+    <text x="385" y="335" font-family="Poppins, Nunito, Segoe UI, Arial, sans-serif" font-size="120" font-weight="700" fill="#17212b" letter-spacing="-2">B<tspan fill="#0f9a79">i</tspan>ng<tspan fill="#0f9a79">i</tspan><tspan fill="#ffb020">i</tspan></text>
+    <text x="389" y="392" font-family="Poppins, Nunito, Segoe UI, Arial, sans-serif" font-size="26" fill="#5c6a72" letter-spacing="4">Gestion d'entreprise</text>
+  </svg>
+</svg>
