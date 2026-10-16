@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/bingii-logo.svg",
     shortcut: "/bingii-logo.svg",
-    apple: "/bingii-logo.svg",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
 
