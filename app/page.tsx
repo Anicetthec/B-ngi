@@ -304,8 +304,8 @@ export default function Home() {
     setCashClosings(visibleCashClosings);
   }, [ownerUid]);
 
-  const synchronize = useCallback(async (uid = ownerUid) => {
-    if (!uid || !user || !navigator.onLine || migratingRef.current || !authGatePassedRef.current) return;
+  const synchronize = useCallback(async (uid = ownerUid): Promise<boolean> => {
+    if (!uid || !user || !navigator.onLine || migratingRef.current || !authGatePassedRef.current) return false;
     setSyncing(true);
     try {
       const profilePendingKey = `zambo-shop-pending:${uid}`;
@@ -340,10 +340,12 @@ export default function Home() {
       await refreshLocal(uid);
       setSyncMessage("Synchronisé");
       if (Object.values(counts).some((count) => count > 0)) notify("success", "Vos données hors ligne sont synchronisées.");
+      return true;
     } catch (error) {
       console.error("Firestore sync failed", error);
       setSyncMessage("Synchronisation en attente");
       notify("error", "La synchronisation a échoué. Les données restent enregistrées sur cet appareil.");
+      return false;
     } finally {
       setSyncing(false);
     }
@@ -351,8 +353,8 @@ export default function Home() {
 
   async function confirmDataSync(onlineMessage: string, offlineMessage: string) {
     if (user && navigator.onLine) {
-      await synchronize();
-      notify("success", onlineMessage);
+      const synchronized = await synchronize();
+      if (synchronized) notify("success", onlineMessage);
       return;
     }
     notify("success", offlineMessage);
