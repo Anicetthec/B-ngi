@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Bĩngi — Gestion de Boutique",
-  description: "Gérez votre boutique, votre stock et vos ventes avec Bĩngi.",
-  applicationName: "Bĩngi",
+  title: "Bingii — Gestion d'entreprise",
+  description: "Gérez votre entreprise, votre stock et vos ventes avec Bingii.",
+  applicationName: "Bingii",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/bingii-logo.svg",
-    shortcut: "/bingii-logo.svg",
+    icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
+    shortcut: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
