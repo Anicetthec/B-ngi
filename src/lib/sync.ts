@@ -165,19 +165,19 @@ export async function loadCloudShops(ownerUid: string): Promise<ShopProfile[]> {
 }
 
 export async function syncPending(ownerUid: string, includePremiumData: boolean): Promise<SyncCounts> {
-  const firestoreDb = requireFirestore();
+  requireFirestore();
   const [products, sales, expenses, debts, debtPayments, suppliers, stockLosses, purchases, supplierPayments, cashMovements, cashClosings] = await Promise.all([
-    db.products.where({ ownerUid, synced: false }).toArray(),
-    db.sales.where({ ownerUid, synced: false }).toArray(),
-    db.expenses.where({ ownerUid, synced: false }).toArray(),
-    db.debts.where({ ownerUid, synced: false }).toArray(),
-    db.debtPayments.where({ ownerUid, synced: false }).toArray(),
-    includePremiumData ? db.suppliers.where({ ownerUid, synced: false }).toArray() : Promise.resolve([]),
-    includePremiumData ? db.stockLosses.where({ ownerUid, synced: false }).toArray() : Promise.resolve([]),
-    includePremiumData ? db.purchases.where({ ownerUid, synced: false }).toArray() : Promise.resolve([]),
-    includePremiumData ? db.supplierPayments.where({ ownerUid, synced: false }).toArray() : Promise.resolve([]),
-    db.cashMovements.where({ ownerUid, synced: false }).toArray(),
-    db.cashClosings.where({ ownerUid, synced: false }).toArray(),
+    db.products.where("ownerUid").equals(ownerUid).toArray(),
+    db.sales.where("ownerUid").equals(ownerUid).toArray(),
+    db.expenses.where("ownerUid").equals(ownerUid).toArray(),
+    db.debts.where("ownerUid").equals(ownerUid).toArray(),
+    db.debtPayments.where("ownerUid").equals(ownerUid).toArray(),
+    includePremiumData ? db.suppliers.where("ownerUid").equals(ownerUid).toArray() : Promise.resolve([]),
+    includePremiumData ? db.stockLosses.where("ownerUid").equals(ownerUid).toArray() : Promise.resolve([]),
+    includePremiumData ? db.purchases.where("ownerUid").equals(ownerUid).toArray() : Promise.resolve([]),
+    includePremiumData ? db.supplierPayments.where("ownerUid").equals(ownerUid).toArray() : Promise.resolve([]),
+    db.cashMovements.where("ownerUid").equals(ownerUid).toArray(),
+    db.cashClosings.where("ownerUid").equals(ownerUid).toArray(),
   ]);
   const counts = {
     products: products.length,
