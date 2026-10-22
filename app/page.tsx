@@ -349,6 +349,15 @@ export default function Home() {
     }
   }, [notify, ownerUid, refreshLocal, user]);
 
+  async function confirmDataSync(onlineMessage: string, offlineMessage: string) {
+    if (user && navigator.onLine) {
+      await synchronize();
+      notify("success", onlineMessage);
+      return;
+    }
+    notify("success", offlineMessage);
+  }
+
   useEffect(() => {
     let cancelled = false;
     let localUid = localStorage.getItem("zambo-local-owner");
@@ -393,7 +402,8 @@ export default function Home() {
         setShop((current) => current ? { ...current, subscriptionStatus: "FREE", subscriptionExpiresAt: null } : current);
         return;
       }
-      const activeShopKey = localStorage.getItem(`zambo-active-shop:${nextUser.uid}`) || nextUser.uid;
+      const storedActiveShopKey = localStorage.getItem(`zambo-active-shop:${nextUser.uid}`);
+      let activeShopKey = storedActiveShopKey || nextUser.uid;
       setOwnerUid(activeShopKey);
       if (migratingRef.current || !authGatePassedRef.current) return;
       const cachedProfile = cachedShopProfile(activeShopKey);
@@ -408,13 +418,50 @@ export default function Home() {
       }
       setLoading(true);
       try {
-        const cloudShop = await loadCloudData(activeShopKey);
+        let cloudShop = await loadCloudData(activeShopKey);
         const [rootCloud, remoteShops] = await Promise.all([loadCloudData(nextUser.uid), loadCloudShops(nextUser.uid)]);
         const allShops = [rootCloud.shop, ...remoteShops].filter((item): item is ShopProfile => Boolean(item)).map((item) => ({ ...item, estActif: rootCloud.shop?.estActif ?? item.estActif, subscriptionExpiresAt: rootCloud.shop?.subscriptionExpiresAt ?? item.subscriptionExpiresAt }));
         if (allShops.length) {
           setShops(allShops);
           localStorage.setItem(`zambo-shops:${nextUser.uid}`, JSON.stringify(allShops));
         }
+
+        // localStorage is cleared when the installed app is removed. In that
+        // case, discover the shop that owns the existing cloud data instead of
+        // silently opening the account-level shop.
+        if (!storedActiveShopKey && allShops.length > 1) {
+          const cloudShops = await Promise.all(allShops.map(async (candidate) => ({
+            candidate,
+            data: await loadCloudData(candidate.ownerUid),
+          })));
+          const scores = await Promise.all(cloudShops.map(async ({ candidate }) => {
+            const [productsCount, salesCount, expensesCount, debtsCount, paymentsCount, suppliersCount, lossesCount, purchasesCount, supplierPaymentsCount, movementsCount, closingsCount] = await Promise.all([
+              db.products.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.sales.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.expenses.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.debts.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.debtPayments.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.suppliers.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.stockLosses.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.purchases.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.supplierPayments.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.cashMovements.where("ownerUid").equals(candidate.ownerUid).count(),
+              db.cashClosings.where("ownerUid").equals(candidate.ownerUid).count(),
+            ]);
+            return {
+              ownerUid: candidate.ownerUid,
+              count: productsCount + salesCount + expensesCount + debtsCount + paymentsCount
+                + suppliersCount + lossesCount + purchasesCount + supplierPaymentsCount
+                + movementsCount + closingsCount,
+            };
+          }));
+          const bestShop = scores.reduce((best, current) => current.count > best.count ? current : best, scores[0]);
+          activeShopKey = bestShop.ownerUid;
+          cloudShop = cloudShops.find(({ candidate }) => candidate.ownerUid === activeShopKey)?.data ?? cloudShop;
+          localStorage.setItem(`zambo-active-shop:${nextUser.uid}`, activeShopKey);
+        }
+
+        setOwnerUid(activeShopKey);
         if (cloudShop.shop) {
           const savedShop = cloudShop.shop;
           setShop(savedShop);
